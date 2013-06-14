@@ -23,10 +23,33 @@
 
 package kotka.groovy.zweig
 
-class ZweigBuilder {
-    def fromSpec(spec) {
-        use(ZweigBuilderCategory) {
-            spec.toZweig()
+import org.codehaus.groovy.ast.expr.ConstantExpression
+import org.codehaus.groovy.ast.expr.VariableExpression
+
+class ZweigBuilderCategory {
+    static toZweig(Number n) {
+        new ConstantExpression(n)
+    }
+
+    static toZweig(String s) {
+        new ConstantExpression(s)
+    }
+
+    static toZweig(List l) {
+        l.collect { it.toZweig() }
+    }
+
+    static final mapToZweig = [
+            variable: { new VariableExpression(it["variable"]) }
+    ]
+
+    static toZweig(Map m) {
+        def action = m.keySet().find {
+            mapToZweig.containsKey(it)
+        }
+
+        if (action != null) {
+            mapToZweig[action](m)
         }
     }
 }
