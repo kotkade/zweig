@@ -29,11 +29,17 @@ class ZweigBuilder {
     def fromSpec(spec) {
         if (spec instanceof Number || spec instanceof String)
             return buildConstantExpression(spec)
+        if (spec instanceof List)
+            return buildList(spec)
 
         throw new Exception("Unknown specification type: ${spec}")
     }
 
     private def buildConstantExpression(spec) {
         new ConstantExpression(spec)
+    }
+
+    private def buildList(spec) {
+        spec.collect { this.fromSpec(it) }
     }
 }

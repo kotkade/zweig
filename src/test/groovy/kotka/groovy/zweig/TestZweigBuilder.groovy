@@ -11,16 +11,20 @@ class TestZweigBuilder extends Specification {
 
         then:
         astOfTypeWithValue z, ConstantExpression, value
+
         where:
         value << [ 1, 1.5, "foo" ]
     }
 
+    def "List are compatible with fromSpec"() {
         when:
-        z = new ZweigBuilder().fromSpec(1.5)
+        def z = new ZweigBuilder().fromSpec([1, 2, 3])
 
         then:
-        z instanceof ConstantExpression
-        z.value == 1.5
+        z instanceof List
+        astOfTypeWithValue z[0], ConstantExpression, 1
+        astOfTypeWithValue z[1], ConstantExpression, 2
+        astOfTypeWithValue z[2], ConstantExpression, 3
     }
 
     private boolean astOfTypeWithValue(underTest, klass, value) {
