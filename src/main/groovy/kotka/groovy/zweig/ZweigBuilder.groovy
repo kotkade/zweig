@@ -23,16 +23,20 @@
 
 package kotka.groovy.zweig
 
+import org.codehaus.groovy.ast.Parameter
 import org.codehaus.groovy.ast.expr.ConstantExpression
+import org.codehaus.groovy.ast.expr.VariableExpression
 
 class ZweigBuilder {
     def fromSpec(spec) {
         if (spec instanceof Number || spec instanceof String)
-            return buildConstantExpression(spec)
-        if (spec instanceof List)
-            return buildList(spec)
-
-        throw new Exception("Unknown specification type: ${spec}")
+            buildConstantExpression spec
+        else if (spec instanceof List)
+            buildList spec
+        else if (spec instanceof Map)
+            buildMap spec
+        else
+            throw new Exception("Unknown specification type: ${spec}")
     }
 
     private def buildConstantExpression(spec) {
@@ -41,5 +45,14 @@ class ZweigBuilder {
 
     private def buildList(spec) {
         spec.collect { this.fromSpec(it) }
+    }
+
+    private def buildMap(spec) {
+        if (spec.containsKey("variable"))
+            buildVariableExpression(spec["variable"])
+    }
+
+    private def buildVariableExpression(v) {
+        new VariableExpression(v)
     }
 }
