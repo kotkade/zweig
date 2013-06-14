@@ -5,16 +5,15 @@ import org.codehaus.groovy.ast.expr.ConstantExpression
 import spock.lang.Specification
 
 class TestZweigBuilder extends Specification {
-    def "Numbers are constants"() {
-        given:
-        def z
-
+    def "Strings and Numbers are constants"() {
         when:
-        z = new ZweigBuilder().fromSpec(1)
+        def z = new ZweigBuilder().fromSpec(value)
 
         then:
-        z instanceof ConstantExpression
-        z.value == 1
+        astOfTypeWithValue z, ConstantExpression, value
+        where:
+        value << [ 1, 1.5, "foo" ]
+    }
 
         when:
         z = new ZweigBuilder().fromSpec(1.5)
@@ -24,12 +23,9 @@ class TestZweigBuilder extends Specification {
         z.value == 1.5
     }
 
-    def "Strings are constants"() {
-        given:
-        def z = new ZweigBuilder().fromSpec("foo")
-
-        expect:
-        z instanceof ConstantExpression
-        z.value == "foo"
+    private boolean astOfTypeWithValue(underTest, klass, value) {
+        assert underTest.class == klass
+        assert underTest.value == value
+        true
     }
 }
