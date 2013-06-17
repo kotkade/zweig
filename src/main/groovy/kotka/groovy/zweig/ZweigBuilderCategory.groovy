@@ -28,6 +28,8 @@ import org.codehaus.groovy.ast.Parameter
 import org.codehaus.groovy.ast.expr.ClassExpression
 import org.codehaus.groovy.ast.expr.ConstantExpression
 import org.codehaus.groovy.ast.expr.VariableExpression
+import org.codehaus.groovy.ast.stmt.ExpressionStatement
+import org.codehaus.groovy.ast.stmt.Statement
 
 class ZweigBuilderCategory {
     /* toZweig */
@@ -79,5 +81,18 @@ class ZweigBuilderCategory {
 
     static toClassNode(Class c) {
         ClassHelper.make(c, false)
+    }
+
+    /* toStatement */
+    static toStatement(Statement s) {
+        s
+    }
+
+    static toStatement(Expression e) {
+        new ExpressionStatement(e)
+    }
+
+    static toStatement(Map m) {
+        m.toZweig().toStatement()
     }
 }

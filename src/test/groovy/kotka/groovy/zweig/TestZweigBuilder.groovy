@@ -5,6 +5,7 @@ import org.codehaus.groovy.ast.Parameter
 import org.codehaus.groovy.ast.expr.ClassExpression
 import org.codehaus.groovy.ast.expr.ConstantExpression
 import org.codehaus.groovy.ast.expr.VariableExpression
+import org.codehaus.groovy.ast.stmt.Statement
 import spock.lang.Specification
 
 class TestZweigBuilder extends Specification {
@@ -76,6 +77,30 @@ class TestZweigBuilder extends Specification {
         then:
         AstAssert.assertSyntaxTree(klassNode, z)
         AstAssert.assertSyntaxTree(klassNode, zNode)
+    }
+
+    /* toStatement */
+    def "toStatement turns Expressions into Statements"() {
+        expect:
+        withCategory {
+            new ConstantExpression("foo").toStatement() instanceof Statement
+        }
+    }
+
+    def "toStatement is idempotent"() {
+        expect:
+        withCategory {
+            new ExpressionStatement(
+                    new ConstantExpression("foo")).
+                    toStatement() instanceof Statement
+        }
+    }
+
+    def "toStatement turns map specifications into Statements"() {
+        expect:
+        withCategory {
+            [variable: "foo"].toStatement() instanceof Statement
+        }
     }
 
     /* Helper */
