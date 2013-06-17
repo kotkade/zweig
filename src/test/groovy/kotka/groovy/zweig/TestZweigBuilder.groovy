@@ -11,7 +11,7 @@ class TestZweigBuilder extends Specification {
         def z = new ZweigBuilder().fromSpec(value)
 
         then:
-        astOfTypeWithValue z, ConstantExpression, value
+        AstAssert.assertSyntaxTree(new ConstantExpression(value), z)
 
         where:
         value << [ 1, 1.5, "foo" ]
@@ -23,9 +23,9 @@ class TestZweigBuilder extends Specification {
 
         then:
         z instanceof List
-        astOfTypeWithValue z[0], ConstantExpression, 1
-        astOfTypeWithValue z[1], ConstantExpression, 2
-        astOfTypeWithValue z[2], ConstantExpression, 3
+        AstAssert.assertSyntaxTree(new ConstantExpression(1), z[0])
+        AstAssert.assertSyntaxTree(new ConstantExpression(2), z[1])
+        AstAssert.assertSyntaxTree(new ConstantExpression(3), z[2])
     }
 
     def "Variables are a map with a variable key"() {
@@ -33,18 +33,8 @@ class TestZweigBuilder extends Specification {
         def z = new ZweigBuilder().fromSpec([variable: "x"])
 
         then:
-        astOfTypeWithName z, VariableExpression, "x"
+        AstAssert.assertSyntaxTree(new VariableExpression("x"), z)
     }
 
-    private boolean astOfTypeWithValue(underTest, klass, value) {
-        assert underTest.class == klass
-        assert underTest.value == value
-        true
-    }
 
-    private boolean astOfTypeWithName(underTest, klass, name) {
-        assert underTest.class == klass
-        assert underTest.name  == name
-        true
-    }
 }
