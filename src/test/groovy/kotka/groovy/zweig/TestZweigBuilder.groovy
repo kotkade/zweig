@@ -48,6 +48,20 @@ class TestZweigBuilder extends Specification {
         AstAssert.assertSyntaxTree(new VariableExpression("x"), z)
     }
 
+    /* toParameter */
+    def "toParameter takes a map from name to class and is idempotent"() {
+        given:
+        def spec  = [foo: String]
+        def parameter = new Parameter(ClassHelper.make(String, false), "foo")
+
+        when:
+        def param     = withCategory { spec.toParameter() }
+        def paramNode = withCategory { parameter.toParameter() }
+
+        then:
+        AstAssert.assertSyntaxTree(parameter, param)
+        AstAssert.assertSyntaxTree(parameter, paramNode)
+    }
 
     /* toClassNode */
     def "toClassNode works on Classes and is idempotent"() {
@@ -64,6 +78,7 @@ class TestZweigBuilder extends Specification {
         AstAssert.assertSyntaxTree(klassNode, zNode)
     }
 
+    /* Helper */
     static withCategory(Closure body) {
         use(ZweigBuilderCategory) { body() }
     }

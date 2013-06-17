@@ -24,6 +24,7 @@
 package kotka.groovy.zweig
 
 import org.codehaus.groovy.ast.ClassHelper
+import org.codehaus.groovy.ast.Parameter
 import org.codehaus.groovy.ast.expr.ClassExpression
 import org.codehaus.groovy.ast.expr.ConstantExpression
 import org.codehaus.groovy.ast.expr.VariableExpression
@@ -57,6 +58,17 @@ class ZweigBuilderCategory {
 
         if (action != null) {
             mapToZweig[action](m)
+        }
+    }
+
+    /* toParameter */
+    static toParameter(Parameter p) {
+        p
+    }
+
+    static toParameter(Map m) {
+        m.inject(null) { _ignore, p, k ->
+            new Parameter(k.toClassNode(), p)
         }
     }
 
