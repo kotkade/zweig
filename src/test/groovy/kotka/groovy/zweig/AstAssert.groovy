@@ -354,34 +354,33 @@ public class AstAssert {
             },
     ]
 
-    static void assertSyntaxTree(ASTNode expected, ASTNode actual) {
-        assertSyntaxTree([expected], [actual])
+    static void assertSyntaxTreeNode(expected, actual) {
+        Assert.assertEquals("Wrong type in AST Node",
+                expected.class, actual.class)
+
+        def simpleClassName = expected.class.simpleName
+        if (ASSERTION_MAP.containsKey(simpleClassName)) {
+            Closure assertion = ASSERTION_MAP.get(simpleClassName)
+            assertion(expected, actual)
+        } else {
+            Assert.fail("Unexpected type: ${expected.class} Update the unit test!")
+        }
     }
 
-    static void assertSyntaxTree(ASTNode[] expected, ASTNode[] actual) {
-        assertSyntaxTree(expected.asList(), actual.asList())
-    }
-
-    static void assertSyntaxTree(List expected, List actual) {
+    static void assertSyntaxTree(expected, actual) {
         if (expected == null && actual == null) return
+
+        if (expected instanceof ASTNode) {
+            assertSyntaxTreeNode(expected, actual)
+            return
+        }
 
         if (actual == null || expected == null || expected.size() != actual?.size()) {
             Assert.fail("AST comparison failure. \nExpected $expected \nReceived $actual")
         }
-        expected.eachWithIndex { item, index ->
-            if (item.getClass().isArray() && actual[index].getClass().isArray()) {
-                assertSyntaxTree(item, actual[index])
-            } else {
-                Assert.assertEquals("Wrong type in AST Node", item.getClass(), actual[index].getClass())
 
-                if (ASSERTION_MAP.containsKey(item.getClass().getSimpleName())) {
-                    Closure assertion = ASSERTION_MAP.get(item.getClass().getSimpleName())
-                    assertion(item, actual[index])
-                } else {
-                    Assert.fail("Unexpected type: ${item.getClass()} Update the unit test!")
-                }
-            }
+        expected.eachWithIndex { item, index ->
+            assertSyntaxTree(item, actual[index])
         }
-        true
     }
 }
