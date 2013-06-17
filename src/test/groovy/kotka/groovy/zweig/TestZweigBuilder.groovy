@@ -2,7 +2,9 @@ package kotka.groovy.zweig
 
 import org.codehaus.groovy.ast.ClassHelper
 import org.codehaus.groovy.ast.ClassNode
+import org.codehaus.groovy.ast.MethodNode
 import org.codehaus.groovy.ast.Parameter
+import org.codehaus.groovy.ast.VariableScope
 import org.codehaus.groovy.ast.expr.ClassExpression
 import org.codehaus.groovy.ast.expr.ConstantExpression
 import org.codehaus.groovy.ast.expr.VariableExpression
@@ -10,6 +12,8 @@ import org.codehaus.groovy.ast.stmt.BlockStatement
 import org.codehaus.groovy.ast.stmt.ExpressionStatement
 import org.codehaus.groovy.ast.stmt.Statement
 import spock.lang.Specification
+
+import java.lang.reflect.Modifier
 
 class TestZweigBuilder extends Specification {
     def "Strings and Numbers are constants"() {
@@ -50,6 +54,39 @@ class TestZweigBuilder extends Specification {
 
         then:
         AstAssert.assertSyntaxTree(new VariableExpression("x"), z)
+    }
+
+    def "Methods are specified as maps"() {
+        given:
+        def target = new MethodNode(
+                "someMethod",
+                Modifier.PUBLIC,
+                ClassHelper.make(Integer, false),
+                [
+                    new Parameter(ClassHelper.make(String, false), "foo"),
+                    new Parameter(ClassHelper.make(Integer, false), "bar"),
+                ] as Parameter[],
+                [
+                    ClassHelper.make(IOException, false)
+                ] as ClassNode[],
+                new BlockStatement([
+                        new ExpressionStatement(
+                                new ConstantExpression(5)
+                        )
+                ], new VariableScope())
+        )
+
+        when:
+        def z = new ZweigBuilder().fromSpec([
+                method:     "someMethod",
+                arguments:  [[foo: String], [bar: Integer]],
+                returnType: Integer,
+                exceptions: [IOException],
+                body:       [5]
+        ])
+
+        then:
+        AstAssert.assertSyntaxTree(target, z)
     }
 
     /* toParameter */

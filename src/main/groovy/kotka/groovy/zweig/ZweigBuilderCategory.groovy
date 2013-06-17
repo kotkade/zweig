@@ -24,12 +24,19 @@
 package kotka.groovy.zweig
 
 import org.codehaus.groovy.ast.ClassHelper
+import org.codehaus.groovy.ast.ClassNode
+import org.codehaus.groovy.ast.MethodNode
 import org.codehaus.groovy.ast.Parameter
+import org.codehaus.groovy.ast.VariableScope
 import org.codehaus.groovy.ast.expr.ClassExpression
 import org.codehaus.groovy.ast.expr.ConstantExpression
+import org.codehaus.groovy.ast.expr.Expression
 import org.codehaus.groovy.ast.expr.VariableExpression
+import org.codehaus.groovy.ast.stmt.BlockStatement
 import org.codehaus.groovy.ast.stmt.ExpressionStatement
 import org.codehaus.groovy.ast.stmt.Statement
+
+import java.lang.reflect.Modifier
 
 class ZweigBuilderCategory {
     /* toZweig */
@@ -50,7 +57,28 @@ class ZweigBuilderCategory {
     }
 
     static final mapToZweig = [
-            variable: { new VariableExpression(it["variable"]) }
+            variable: { new VariableExpression(it["variable"]) },
+            method: {
+                def methodName = it["method"]
+                def modifier   = orElse(it["modifier"]) { Modifier.PUBLIC }
+
+                def parameters = it["arguments"].collect  { it.toParameter() }
+                def exceptions = it["exceptions"].collect { it.toClassNode() }
+
+                def returnType = orElse(it["returnType"]) { Object }.toClassNode()
+                def body       = orElse(it["body"]) { [] }.collect {
+                    it.toStatement()
+                }
+
+                new MethodNode(
+                    methodName,
+                    modifier,
+                    returnType,
+                    parameters as Parameter[],
+                    exceptions as ClassNode[],
+                    new BlockStatement(body, new VariableScope())
+                )
+            }
     ]
 
     static toZweig(Map m) {
@@ -94,5 +122,10 @@ class ZweigBuilderCategory {
 
     static toStatement(Object m) {
         m.toZweig().toStatement()
+    }
+
+    /* Helper */
+    private static orElse(x, forNil={}) {
+        x != null ? x : forNil()
     }
 }
