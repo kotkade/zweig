@@ -106,7 +106,7 @@ class TestZweigBuilder extends Specification {
         }
     }
 
-    def "toStatement turns map specifications into Statements"() {
+    def "toStatement turns things in the domain of toZweig into Statements"() {
         expect:
         withCategory {
             [variable: "foo"].toStatement() instanceof Statement

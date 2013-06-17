@@ -92,7 +92,7 @@ class ZweigBuilderCategory {
         new ExpressionStatement(e)
     }
 
-    static toStatement(Map m) {
+    static toStatement(Object m) {
         m.toZweig().toStatement()
     }
 }
