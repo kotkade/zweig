@@ -12,6 +12,7 @@ import org.codehaus.groovy.ast.expr.ConstantExpression
 import org.codehaus.groovy.ast.expr.ConstructorCallExpression
 import org.codehaus.groovy.ast.expr.ListExpression
 import org.codehaus.groovy.ast.expr.MethodCallExpression
+import org.codehaus.groovy.ast.expr.StaticMethodCallExpression
 import org.codehaus.groovy.ast.expr.VariableExpression
 import org.codehaus.groovy.ast.stmt.BlockStatement
 import org.codehaus.groovy.ast.stmt.ExpressionStatement
@@ -113,6 +114,27 @@ class TestZweigBuilder extends Specification {
                 call: "bar",
                 on:   [variable: "foo"],
                 with: [5]
+        ])
+
+        then:
+        AstAssert.assertSyntaxTree(target, z)
+    }
+
+    def "Static method calls are specified as maps"() {
+        given:
+        def target = new StaticMethodCallExpression(
+                ClassHelper.make(String, false),
+                "format",
+                new ArgumentListExpression([
+                        new ConstantExpression("foo")
+                ])
+        )
+
+        when:
+        def z = new ZweigBuilder().fromSpec([
+                callStatic: "format",
+                on:         String,
+                with:       ["foo"]
         ])
 
         then:

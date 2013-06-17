@@ -36,6 +36,7 @@ import org.codehaus.groovy.ast.expr.ConstructorCallExpression
 import org.codehaus.groovy.ast.expr.Expression
 import org.codehaus.groovy.ast.expr.ListExpression
 import org.codehaus.groovy.ast.expr.MethodCallExpression
+import org.codehaus.groovy.ast.expr.StaticMethodCallExpression
 import org.codehaus.groovy.ast.expr.VariableExpression
 import org.codehaus.groovy.ast.stmt.BlockStatement
 import org.codehaus.groovy.ast.stmt.ExpressionStatement
@@ -94,6 +95,18 @@ class ZweigBuilderCategory {
                 new MethodCallExpression(
                         target.toZweig(),
                         method.toZweig(),
+                        arguments.toArgumentList()
+                )
+            },
+
+            callStatic: {
+                def method    = it["callStatic"]
+                def target    = it["on"]
+                def arguments = orElse(it["with"]) { [] }
+
+                new StaticMethodCallExpression(
+                        target.toClassNode(),
+                        method,
                         arguments.toArgumentList()
                 )
             },
