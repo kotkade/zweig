@@ -23,6 +23,8 @@
 
 package kotka.groovy.zweig
 
+import org.codehaus.groovy.ast.ClassHelper
+import org.codehaus.groovy.ast.expr.ClassExpression
 import org.codehaus.groovy.ast.expr.ConstantExpression
 import org.codehaus.groovy.ast.expr.VariableExpression
 
@@ -33,6 +35,10 @@ class ZweigBuilderCategory {
 
     static toZweig(String s) {
         new ConstantExpression(s)
+    }
+
+    static toZweig(Class c) {
+        new ClassExpression(ClassHelper.make(c, false))
     }
 
     static toZweig(List l) {

@@ -1,6 +1,8 @@
 package kotka.groovy.zweig
 
+import org.codehaus.groovy.ast.ClassHelper
 import org.codehaus.groovy.ast.Parameter
+import org.codehaus.groovy.ast.expr.ClassExpression
 import org.codehaus.groovy.ast.expr.ConstantExpression
 import org.codehaus.groovy.ast.expr.VariableExpression
 import spock.lang.Specification
@@ -15,6 +17,16 @@ class TestZweigBuilder extends Specification {
 
         where:
         value << [ 1, 1.5, "foo" ]
+    }
+
+    def "Classes are constants"() {
+        when:
+        def z = new ZweigBuilder().fromSpec(String)
+
+        then:
+        AstAssert.assertSyntaxTree(
+                new ClassExpression(ClassHelper.make(String, false)),
+                z)
     }
 
     def "List are compatible with fromSpec"() {
