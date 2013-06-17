@@ -31,6 +31,7 @@ import org.codehaus.groovy.ast.VariableScope
 import org.codehaus.groovy.ast.expr.ClassExpression
 import org.codehaus.groovy.ast.expr.ConstantExpression
 import org.codehaus.groovy.ast.expr.Expression
+import org.codehaus.groovy.ast.expr.ListExpression
 import org.codehaus.groovy.ast.expr.VariableExpression
 import org.codehaus.groovy.ast.stmt.BlockStatement
 import org.codehaus.groovy.ast.stmt.ExpressionStatement
@@ -53,7 +54,7 @@ class ZweigBuilderCategory {
     }
 
     static toZweig(List l) {
-        l.collect { it.toZweig() }
+        new ListExpression(l.collect { it.toZweig() })
     }
 
     static final mapToZweig = [

@@ -7,6 +7,7 @@ import org.codehaus.groovy.ast.Parameter
 import org.codehaus.groovy.ast.VariableScope
 import org.codehaus.groovy.ast.expr.ClassExpression
 import org.codehaus.groovy.ast.expr.ConstantExpression
+import org.codehaus.groovy.ast.expr.ListExpression
 import org.codehaus.groovy.ast.expr.VariableExpression
 import org.codehaus.groovy.ast.stmt.BlockStatement
 import org.codehaus.groovy.ast.stmt.ExpressionStatement
@@ -37,15 +38,19 @@ class TestZweigBuilder extends Specification {
                 z)
     }
 
-    def "List are compatible with fromSpec"() {
+    def "List are constants"() {
+        given:
+        def target = new ListExpression([
+            new ConstantExpression(1),
+            new ConstantExpression(2),
+            new ConstantExpression(3)
+        ])
+
         when:
         def z = new ZweigBuilder().fromSpec([1, 2, 3])
 
         then:
-        z instanceof List
-        AstAssert.assertSyntaxTree(new ConstantExpression(1), z[0])
-        AstAssert.assertSyntaxTree(new ConstantExpression(2), z[1])
-        AstAssert.assertSyntaxTree(new ConstantExpression(3), z[2])
+        AstAssert.assertSyntaxTree(target, z)
     }
 
     def "Variables are a map with a variable key"() {
