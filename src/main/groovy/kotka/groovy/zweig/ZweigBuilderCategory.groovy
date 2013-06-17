@@ -29,6 +29,7 @@ import org.codehaus.groovy.ast.expr.ConstantExpression
 import org.codehaus.groovy.ast.expr.VariableExpression
 
 class ZweigBuilderCategory {
+    /* toZweig */
     static toZweig(Number n) {
         new ConstantExpression(n)
     }
@@ -38,7 +39,7 @@ class ZweigBuilderCategory {
     }
 
     static toZweig(Class c) {
-        new ClassExpression(ClassHelper.make(c, false))
+        new ClassExpression(c.toClassNode())
     }
 
     static toZweig(List l) {
@@ -57,5 +58,14 @@ class ZweigBuilderCategory {
         if (action != null) {
             mapToZweig[action](m)
         }
+    }
+
+    /* toClassNode */
+    static toClassNode(ClassNode n) {
+        n
+    }
+
+    static toClassNode(Class c) {
+        ClassHelper.make(c, false)
     }
 }

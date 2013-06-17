@@ -49,4 +49,22 @@ class TestZweigBuilder extends Specification {
     }
 
 
+    /* toClassNode */
+    def "toClassNode works on Classes and is idempotent"() {
+        given:
+        def klass = String
+        def klassNode = ClassHelper.make(klass, false)
+
+        when:
+        def z     = withCategory { klass.toClassNode() }
+        def zNode = withCategory { klassNode.toClassNode() }
+
+        then:
+        AstAssert.assertSyntaxTree(klassNode, z)
+        AstAssert.assertSyntaxTree(klassNode, zNode)
+    }
+
+    static withCategory(Closure body) {
+        use(ZweigBuilderCategory) { body() }
+    }
 }
