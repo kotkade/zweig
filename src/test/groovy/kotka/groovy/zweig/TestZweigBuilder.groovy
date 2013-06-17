@@ -2,6 +2,7 @@ package kotka.groovy.zweig
 
 import org.codehaus.groovy.ast.ClassHelper
 import org.codehaus.groovy.ast.ClassNode
+import org.codehaus.groovy.ast.ConstructorNode
 import org.codehaus.groovy.ast.MethodNode
 import org.codehaus.groovy.ast.Parameter
 import org.codehaus.groovy.ast.VariableScope
@@ -112,6 +113,42 @@ class TestZweigBuilder extends Specification {
                 call: "bar",
                 on:   [variable: "foo"],
                 with: [5]
+        ])
+
+        then:
+        AstAssert.assertSyntaxTree(target, z)
+    }
+
+    def "Constructors are specified as maps"() {
+        given:
+        def target = new ConstructorNode(
+                Modifier.PUBLIC,
+                [
+                        new Parameter(ClassHelper.make(String, false), "foo"),
+                        new Parameter(ClassHelper.make(Integer, false), "bar")
+                ] as Parameter[],
+                [ ClassHelper.make(IOException, false) ] as ClassNode[],
+                new BlockStatement([
+                        new ExpressionStatement(
+                                new ConstructorCallExpression(
+                                        ClassNode.SUPER,
+                                        new ArgumentListExpression([
+                                                new VariableExpression("bar"),
+                                                new ConstantExpression(5)
+                                        ])
+                                )
+                        )
+                ], new VariableScope())
+        )
+
+        when:
+        def z = new ZweigBuilder().fromSpec([
+                constructor: [[foo: String], [bar: Integer]],
+                exceptions:  [IOException],
+                body: [
+                        [construct: ClassNode.SUPER,
+                         with:      [[variable: "bar"], 5]]
+                ]
         ])
 
         then:

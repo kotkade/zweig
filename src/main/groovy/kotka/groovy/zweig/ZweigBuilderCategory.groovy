@@ -25,6 +25,7 @@ package kotka.groovy.zweig
 
 import org.codehaus.groovy.ast.ClassHelper
 import org.codehaus.groovy.ast.ClassNode
+import org.codehaus.groovy.ast.ConstructorNode
 import org.codehaus.groovy.ast.MethodNode
 import org.codehaus.groovy.ast.Parameter
 import org.codehaus.groovy.ast.VariableScope
@@ -94,6 +95,25 @@ class ZweigBuilderCategory {
                         target.toZweig(),
                         method.toZweig(),
                         arguments.toArgumentList()
+                )
+            },
+
+            constructor: {
+                def modifiers  = orElse(it["modifiers"]) { Modifier.PUBLIC }
+                def parameters = it["constructor"].collect { it.toParameter() }
+                def exceptions = orElse(it["exceptions"]) { [] }.collect {
+                    it.toClassNode()
+                }
+                def body = it["body"]
+
+                new ConstructorNode(
+                        modifiers,
+                        parameters as Parameter[],
+                        exceptions as ClassNode[],
+                        new BlockStatement(
+                                body.collect { it.toStatement() },
+                                new VariableScope()
+                        )
                 )
             },
 
