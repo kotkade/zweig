@@ -32,6 +32,7 @@ import org.codehaus.groovy.ast.expr.ClassExpression
 import org.codehaus.groovy.ast.expr.ConstantExpression
 import org.codehaus.groovy.ast.expr.Expression
 import org.codehaus.groovy.ast.expr.ListExpression
+import org.codehaus.groovy.ast.expr.MethodCallExpression
 import org.codehaus.groovy.ast.expr.VariableExpression
 import org.codehaus.groovy.ast.stmt.BlockStatement
 import org.codehaus.groovy.ast.stmt.ExpressionStatement
@@ -59,6 +60,7 @@ class ZweigBuilderCategory {
 
     static final mapToZweig = [
             variable: { new VariableExpression(it["variable"]) },
+
             method: {
                 def methodName = it["method"]
                 def modifier   = orElse(it["modifier"]) { Modifier.PUBLIC }
@@ -78,6 +80,18 @@ class ZweigBuilderCategory {
                     parameters as Parameter[],
                     exceptions as ClassNode[],
                     new BlockStatement(body, new VariableScope())
+                )
+            },
+
+            call: {
+                def method    = it["call"]
+                def target    = it["on"]
+                def arguments = orElse(it["with"]) { [] }
+
+                new MethodCallExpression(
+                        target.toZweig(),
+                        method.toZweig(),
+                        arguments.toZweig()
                 )
             }
     ]

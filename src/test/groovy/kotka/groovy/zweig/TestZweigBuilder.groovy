@@ -8,6 +8,7 @@ import org.codehaus.groovy.ast.VariableScope
 import org.codehaus.groovy.ast.expr.ClassExpression
 import org.codehaus.groovy.ast.expr.ConstantExpression
 import org.codehaus.groovy.ast.expr.ListExpression
+import org.codehaus.groovy.ast.expr.MethodCallExpression
 import org.codehaus.groovy.ast.expr.VariableExpression
 import org.codehaus.groovy.ast.stmt.BlockStatement
 import org.codehaus.groovy.ast.stmt.ExpressionStatement
@@ -88,6 +89,27 @@ class TestZweigBuilder extends Specification {
                 returnType: Integer,
                 exceptions: [IOException],
                 body:       [5]
+        ])
+
+        then:
+        AstAssert.assertSyntaxTree(target, z)
+    }
+
+    def "Method calls are specified as maps"() {
+        given:
+        def target = new MethodCallExpression(
+                new VariableExpression("foo"),
+                new ConstantExpression("bar"),
+                new ListExpression([
+                        new ConstantExpression(5)
+                ])
+        )
+
+        when:
+        def z = new ZweigBuilder().fromSpec([
+                call: "bar",
+                on:   [variable: "foo"],
+                with: [5]
         ])
 
         then:
