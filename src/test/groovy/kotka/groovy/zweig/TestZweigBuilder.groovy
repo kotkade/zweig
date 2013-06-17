@@ -5,6 +5,7 @@ import org.codehaus.groovy.ast.ClassNode
 import org.codehaus.groovy.ast.MethodNode
 import org.codehaus.groovy.ast.Parameter
 import org.codehaus.groovy.ast.VariableScope
+import org.codehaus.groovy.ast.expr.ArgumentListExpression
 import org.codehaus.groovy.ast.expr.ClassExpression
 import org.codehaus.groovy.ast.expr.ConstantExpression
 import org.codehaus.groovy.ast.expr.ListExpression
@@ -117,7 +118,7 @@ class TestZweigBuilder extends Specification {
     }
 
     /* toParameter */
-    def "toParameter takes a map from name to class and is idempotent"() {
+    def "toParameter takes a map from name to class"() {
         given:
         def parameter = new Parameter(ClassHelper.make(String, false), "foo")
 
@@ -174,6 +175,31 @@ class TestZweigBuilder extends Specification {
         expect:
         withCategory {
             [variable: "foo"].toStatement() instanceof Statement
+        }
+    }
+
+    /* toArgumentList */
+    def "toArgumentList turns a list into an argument list"() {
+        given:
+        def target = new ArgumentListExpression([
+                new ConstantExpression(5),
+                new VariableExpression("foo")
+        ])
+
+        when:
+        def z = withCategory { [5, [variable: "foo"]].toArgumentList() }
+
+        then:
+        AstAssert.assertSyntaxTree(target, z)
+    }
+
+    def "toArgumentList is idempotent"() {
+        given:
+        def target = new ArgumentListExpression([])
+
+        expect:
+        withCategory {
+            target.toArgumentList() instanceof ArgumentListExpression
         }
     }
 
