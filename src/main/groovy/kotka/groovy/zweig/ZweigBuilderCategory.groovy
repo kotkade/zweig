@@ -31,6 +31,7 @@ import org.codehaus.groovy.ast.VariableScope
 import org.codehaus.groovy.ast.expr.ArgumentListExpression
 import org.codehaus.groovy.ast.expr.ClassExpression
 import org.codehaus.groovy.ast.expr.ConstantExpression
+import org.codehaus.groovy.ast.expr.ConstructorCallExpression
 import org.codehaus.groovy.ast.expr.Expression
 import org.codehaus.groovy.ast.expr.ListExpression
 import org.codehaus.groovy.ast.expr.MethodCallExpression
@@ -92,6 +93,16 @@ class ZweigBuilderCategory {
                 new MethodCallExpression(
                         target.toZweig(),
                         method.toZweig(),
+                        arguments.toArgumentList()
+                )
+            },
+
+            construct: {
+                def klass     = it["construct"]
+                def arguments = orElse(it["with"]) { [] }
+
+                new ConstructorCallExpression(
+                        klass.toClassNode(),
                         arguments.toArgumentList()
                 )
             }

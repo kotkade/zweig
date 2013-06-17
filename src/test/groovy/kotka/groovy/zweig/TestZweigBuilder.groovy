@@ -8,6 +8,7 @@ import org.codehaus.groovy.ast.VariableScope
 import org.codehaus.groovy.ast.expr.ArgumentListExpression
 import org.codehaus.groovy.ast.expr.ClassExpression
 import org.codehaus.groovy.ast.expr.ConstantExpression
+import org.codehaus.groovy.ast.expr.ConstructorCallExpression
 import org.codehaus.groovy.ast.expr.ListExpression
 import org.codehaus.groovy.ast.expr.MethodCallExpression
 import org.codehaus.groovy.ast.expr.VariableExpression
@@ -115,6 +116,26 @@ class TestZweigBuilder extends Specification {
 
         then:
         AstAssert.assertSyntaxTree(target, z)
+    }
+
+    def "Constructor calls are specified by maps"() {
+        given:
+        def target = new ConstructorCallExpression(
+                ClassHelper.make(Integer, false),
+                new ArgumentListExpression([
+                        new ConstantExpression(5)
+                ])
+        )
+
+        when:
+        def z = new ZweigBuilder().fromSpec([
+                construct: Integer,
+                with:      [5]
+        ])
+
+        then:
+        AstAssert.assertSyntaxTree(target, z)
+
     }
 
     /* toParameter */
