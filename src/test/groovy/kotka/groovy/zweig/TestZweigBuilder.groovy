@@ -101,7 +101,7 @@ class TestZweigBuilder extends Specification {
         def target = new MethodCallExpression(
                 new VariableExpression("foo"),
                 new ConstantExpression("bar"),
-                new ListExpression([
+                new ArgumentListExpression([
                         new ConstantExpression(5)
                 ])
         )

@@ -92,7 +92,7 @@ class ZweigBuilderCategory {
                 new MethodCallExpression(
                         target.toZweig(),
                         method.toZweig(),
-                        arguments.toZweig()
+                        arguments.toArgumentList()
                 )
             }
     ]
