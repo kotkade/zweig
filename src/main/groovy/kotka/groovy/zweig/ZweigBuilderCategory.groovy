@@ -68,20 +68,20 @@ class ZweigBuilderCategory {
 
             method: {
                 def methodName = it["method"]
-                def modifier   = orElse(it["modifier"]) { Modifier.PUBLIC }
+                def modifier   = it["modifier"] ?: Modifier.PUBLIC
 
                 def parameters = it["arguments"].collect  { it.toParameter() }
                 def exceptions = it["exceptions"].collect { it.toClassNode() }
 
-                def returnType = orElse(it["returnType"]) { Object }.toClassNode()
-                def body       = orElse(it["body"]) { [] }.collect {
+                def returnType = it["returnType"] ?: ClassHelper.OBJECT_TYPE
+                def body       = it["body"].collect {
                     it.toStatement()
                 }
 
                 new MethodNode(
                     methodName,
                     modifier,
-                    returnType,
+                    returnType.toClassNode(),
                     parameters as Parameter[],
                     exceptions as ClassNode[],
                     new BlockStatement(body, new VariableScope())
@@ -89,55 +89,39 @@ class ZweigBuilderCategory {
             },
 
             call: {
-                def method    = it["call"]
-                def target    = it["on"]
-                def arguments = orElse(it["with"]) { [] }
-
                 new MethodCallExpression(
-                        target.toZweig(),
-                        method.toZweig(),
-                        arguments.toArgumentList()
+                        it["on"].toZweig(),
+                        it["call"].toZweig(),
+                        it["with"].toArgumentList()
                 )
             },
 
             callStatic: {
-                def method    = it["callStatic"]
-                def target    = it["on"]
-                def arguments = orElse(it["with"]) { [] }
-
                 new StaticMethodCallExpression(
-                        target.toClassNode(),
-                        method,
-                        arguments.toArgumentList()
+                        it["on"].toClassNode(),
+                        it["callStatic"],
+                        it["with"].toArgumentList()
                 )
             },
 
             constructor: {
-                def modifiers  = orElse(it["modifiers"]) { Modifier.PUBLIC }
+                def modifiers  = it["modifiers"] ?: Modifier.PUBLIC
                 def parameters = it["constructor"].collect { it.toParameter() }
-                def exceptions = orElse(it["exceptions"]) { [] }.collect {
-                    it.toClassNode()
-                }
-                def body = it["body"]
+                def exceptions = it["exceptions"].collect  { it.toClassNode() }
+                def body       = it["body"].collect { it.toStatement() }
 
                 new ConstructorNode(
                         modifiers,
                         parameters as Parameter[],
                         exceptions as ClassNode[],
-                        new BlockStatement(
-                                body.collect { it.toStatement() },
-                                new VariableScope()
-                        )
+                        new BlockStatement(body, new VariableScope())
                 )
             },
 
             construct: {
-                def klass     = it["construct"]
-                def arguments = orElse(it["with"]) { [] }
-
                 new ConstructorCallExpression(
-                        klass.toClassNode(),
-                        arguments.toArgumentList()
+                        it["construct"].toClassNode(),
+                        it["with"].toArgumentList()
                 )
             }
     ]
@@ -196,10 +180,5 @@ class ZweigBuilderCategory {
 
     static toArgumentList(List l) {
         new ArgumentListExpression(l.collect { it.toZweig() })
-    }
-
-    /* Helper */
-    private static orElse(x, forNil={}) {
-        x != null ? x : forNil()
     }
 }
