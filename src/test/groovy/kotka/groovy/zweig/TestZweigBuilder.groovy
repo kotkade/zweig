@@ -283,6 +283,13 @@ class TestZweigBuilder extends Specification {
         }
     }
 
+    def "toArgumentList on null is the empty argument list"() {
+        expect:
+        withCategory {
+            null.toArgumentList() == ArgumentListExpression.EMPTY_ARGUMENTS
+        }
+    }
+
     /* Helper */
     static withCategory(Closure body) {
         use(ZweigBuilderCategory) { body() }

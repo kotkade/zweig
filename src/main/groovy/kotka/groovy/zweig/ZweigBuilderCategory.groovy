@@ -41,6 +41,7 @@ import org.codehaus.groovy.ast.expr.VariableExpression
 import org.codehaus.groovy.ast.stmt.BlockStatement
 import org.codehaus.groovy.ast.stmt.ExpressionStatement
 import org.codehaus.groovy.ast.stmt.Statement
+import org.codehaus.groovy.runtime.NullObject
 
 import java.lang.reflect.Modifier
 
@@ -180,13 +181,17 @@ class ZweigBuilderCategory {
         new ExpressionStatement(e)
     }
 
-    static toStatement(Object m) {
-        m.toZweig().toStatement()
+    static toStatement(Object o) {
+        o.toZweig().toStatement()
     }
 
     /* toArgumentList */
     static toArgumentList(ArgumentListExpression l) {
         l
+    }
+
+    static toArgumentList(NullObject _null) {
+        ArgumentListExpression.EMPTY_ARGUMENTS
     }
 
     static toArgumentList(List l) {
