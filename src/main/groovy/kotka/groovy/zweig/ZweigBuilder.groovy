@@ -24,7 +24,7 @@
 package kotka.groovy.zweig
 
 class ZweigBuilder {
-    def fromSpec(spec) {
+    def static fromSpec(spec) {
         use(ZweigBuilderCategory) {
             spec.toZweig()
         }

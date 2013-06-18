@@ -24,7 +24,7 @@ import java.lang.reflect.Modifier
 class TestZweigBuilder extends Specification {
     def "Strings and Numbers are constants"() {
         when:
-        def z = new ZweigBuilder().fromSpec(value)
+        def z = ZweigBuilder.fromSpec(value)
 
         then:
         AstAssert.assertSyntaxTree(new ConstantExpression(value), z)
@@ -35,7 +35,7 @@ class TestZweigBuilder extends Specification {
 
     def "Classes are constants"() {
         when:
-        def z = new ZweigBuilder().fromSpec(String)
+        def z = ZweigBuilder.fromSpec(String)
 
         then:
         AstAssert.assertSyntaxTree(
@@ -52,7 +52,7 @@ class TestZweigBuilder extends Specification {
         ])
 
         when:
-        def z = new ZweigBuilder().fromSpec([1, 2, 3])
+        def z = ZweigBuilder.fromSpec([1, 2, 3])
 
         then:
         AstAssert.assertSyntaxTree(target, z)
@@ -60,7 +60,7 @@ class TestZweigBuilder extends Specification {
 
     def "Variables are a map with a variable key"() {
         when:
-        def z = new ZweigBuilder().fromSpec([variable: "x"])
+        def z = ZweigBuilder.fromSpec([variable: "x"])
 
         then:
         AstAssert.assertSyntaxTree(new VariableExpression("x"), z)
@@ -87,7 +87,7 @@ class TestZweigBuilder extends Specification {
         )
 
         when:
-        def z = new ZweigBuilder().fromSpec([
+        def z = ZweigBuilder.fromSpec([
                 method:     "someMethod",
                 arguments:  [[foo: String], [bar: Integer]],
                 returnType: Integer,
@@ -110,7 +110,7 @@ class TestZweigBuilder extends Specification {
         )
 
         when:
-        def z = new ZweigBuilder().fromSpec([
+        def z = ZweigBuilder.fromSpec([
                 call: "bar",
                 on:   [variable: "foo"],
                 with: [5]
@@ -131,7 +131,7 @@ class TestZweigBuilder extends Specification {
         )
 
         when:
-        def z = new ZweigBuilder().fromSpec([
+        def z = ZweigBuilder.fromSpec([
                 callStatic: "format",
                 on:         String,
                 with:       ["foo"]
@@ -164,7 +164,7 @@ class TestZweigBuilder extends Specification {
         )
 
         when:
-        def z = new ZweigBuilder().fromSpec([
+        def z = ZweigBuilder.fromSpec([
                 constructor: [[foo: String], [bar: Integer]],
                 exceptions:  [IOException],
                 body: [
@@ -187,7 +187,7 @@ class TestZweigBuilder extends Specification {
         )
 
         when:
-        def z = new ZweigBuilder().fromSpec([
+        def z = ZweigBuilder.fromSpec([
                 construct: Integer,
                 with:      [5]
         ])
