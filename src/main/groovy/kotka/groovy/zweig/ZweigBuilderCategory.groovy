@@ -30,6 +30,7 @@ import org.codehaus.groovy.ast.MethodNode
 import org.codehaus.groovy.ast.Parameter
 import org.codehaus.groovy.ast.VariableScope
 import org.codehaus.groovy.ast.expr.ArgumentListExpression
+import org.codehaus.groovy.ast.expr.BinaryExpression
 import org.codehaus.groovy.ast.expr.ClassExpression
 import org.codehaus.groovy.ast.expr.ConstantExpression
 import org.codehaus.groovy.ast.expr.ConstructorCallExpression
@@ -45,6 +46,8 @@ import org.codehaus.groovy.ast.stmt.ExpressionStatement
 import org.codehaus.groovy.ast.stmt.ReturnStatement
 import org.codehaus.groovy.ast.stmt.Statement
 import org.codehaus.groovy.runtime.NullObject
+import org.codehaus.groovy.syntax.Token
+import org.codehaus.groovy.syntax.Types
 
 import java.lang.reflect.Modifier
 
@@ -145,6 +148,14 @@ class ZweigBuilderCategory {
                 new ConstructorCallExpression(
                         it["construct"].toClassNode(),
                         it["with"].toArgumentList()
+                )
+            },
+
+            set: {
+                new BinaryExpression(
+                        it["set"].toZweig(),
+                        new Token(Types.EQUALS, "=", -1, -1),
+                        it["to"].toZweig()
                 )
             }
     ]

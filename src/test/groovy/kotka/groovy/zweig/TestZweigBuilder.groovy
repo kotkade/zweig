@@ -7,6 +7,7 @@ import org.codehaus.groovy.ast.MethodNode
 import org.codehaus.groovy.ast.Parameter
 import org.codehaus.groovy.ast.VariableScope
 import org.codehaus.groovy.ast.expr.ArgumentListExpression
+import org.codehaus.groovy.ast.expr.BinaryExpression
 import org.codehaus.groovy.ast.expr.ClassExpression
 import org.codehaus.groovy.ast.expr.ConstantExpression
 import org.codehaus.groovy.ast.expr.ConstructorCallExpression
@@ -20,6 +21,8 @@ import org.codehaus.groovy.ast.stmt.BlockStatement
 import org.codehaus.groovy.ast.stmt.ExpressionStatement
 import org.codehaus.groovy.ast.stmt.ReturnStatement
 import org.codehaus.groovy.ast.stmt.Statement
+import org.codehaus.groovy.syntax.Token
+import org.codehaus.groovy.syntax.Types
 import spock.lang.Specification
 
 import java.lang.reflect.Modifier
@@ -196,6 +199,21 @@ class TestZweigBuilder extends Specification {
                 on:         String,
                 with:       ["foo"]
         ])
+
+        then:
+        AstAssert.assertSyntaxTree(target, z)
+    }
+
+    def "Assignment dispatches on the 'set' key"() {
+        given:
+        def target = new BinaryExpression(
+                new VariableExpression("foo"),
+                new Token(Types.EQUALS, "=", -1, -1),
+                new ConstantExpression(5)
+        )
+
+        when:
+        def z = ZweigBuilder.fromSpec([set: [variable: "foo"], to: 5])
 
         then:
         AstAssert.assertSyntaxTree(target, z)
