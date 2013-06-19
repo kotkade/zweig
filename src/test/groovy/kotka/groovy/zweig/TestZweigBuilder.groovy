@@ -93,7 +93,7 @@ class TestZweigBuilder extends Specification {
         given:
         def target = new MethodNode(
                 "someMethod",
-                Modifier.PUBLIC,
+                Modifier.PUBLIC | Modifier.STATIC,
                 ClassHelper.make(Integer, false),
                 [
                     new Parameter(ClassHelper.make(String, false), "foo"),
@@ -112,6 +112,7 @@ class TestZweigBuilder extends Specification {
         when:
         def z = ZweigBuilder.fromSpec([
                 method:     "someMethod",
+                modifier:   ["public", "static"],
                 arguments:  [[foo: String], [bar: Integer]],
                 returnType: Integer,
                 exceptions: [IOException],

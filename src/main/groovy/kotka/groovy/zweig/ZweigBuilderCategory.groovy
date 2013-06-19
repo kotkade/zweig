@@ -88,7 +88,7 @@ class ZweigBuilderCategory {
 
                 new MethodNode(
                     methodName,
-                    modifier,
+                    modifier.toModifier(),
                     returnType.toClassNode(),
                     parameters as Parameter[],
                     exceptions as ClassNode[],
@@ -113,13 +113,13 @@ class ZweigBuilderCategory {
             },
 
             constructor: {
-                def modifiers  = it["modifiers"] ?: Modifier.PUBLIC
+                def modifier   = it["modifier"] ?: Modifier.PUBLIC
                 def parameters = it["constructor"].collect { it.toParameter() }
                 def exceptions = it["exceptions"].collect  { it.toClassNode() }
                 def body       = it["body"].collect { it.toStatement() }
 
                 new ConstructorNode(
-                        modifiers,
+                        modifier.toModifier(),
                         parameters as Parameter[],
                         exceptions as ClassNode[],
                         new BlockStatement(body, new VariableScope())
