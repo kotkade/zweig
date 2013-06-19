@@ -322,6 +322,34 @@ class TestZweigBuilder extends Specification {
         }
     }
 
+    /* toModifier */
+    def "toModifier takes Integers verbatim"() {
+        given:
+        def m = Modifier.PUBLIC | Modifier.STATIC
+
+        expect:
+        withCategory {
+            m.toModifier() == m
+        }
+    }
+
+    def "toModifier translates Strings"() {
+        expect:
+        withCategory {
+            "public".toModifier() == Modifier.PUBLIC
+        }
+    }
+
+    def "toModifier combines lists of modifiers"() {
+        given:
+        def m = Modifier.PUBLIC | Modifier.STATIC
+
+        expect:
+        withCategory {
+            ["public", Modifier.STATIC].toModifier() == m
+        }
+    }
+
     /* Helper */
     static withCategory(Closure body) {
         use(ZweigBuilderCategory) { body() }

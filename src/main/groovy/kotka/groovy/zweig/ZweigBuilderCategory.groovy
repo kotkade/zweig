@@ -193,4 +193,28 @@ class ZweigBuilderCategory {
     static toArgumentList(List l) {
         new ArgumentListExpression(l.collect { it.toZweig() })
     }
+
+    /* toModifier */
+    static toModifier(Integer i) {
+        i
+    }
+
+    def private static Map modifierTranslation = [
+            public:       Modifier.PUBLIC,
+            private:      Modifier.PRIVATE,
+            protected:    Modifier.PROTECTED,
+
+            final:        Modifier.FINAL,
+            abstract:     Modifier.ABSTRACT,
+            static:       Modifier.STATIC,
+            synchronized: Modifier.SYNCHRONIZED
+    ]
+
+    static toModifier(String s) {
+        modifierTranslation[s.toLowerCase()]
+    }
+
+    static toModifier(List l) {
+        l.inject(0) { mod, m -> mod | m.toModifier() }
+    }
 }
