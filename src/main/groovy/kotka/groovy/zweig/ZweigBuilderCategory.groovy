@@ -141,6 +141,11 @@ class ZweigBuilderCategory {
 
         if (action != null) {
             mapToZweig[action](m)
+        } else {
+            def keys = m.keySet().join ", "
+            throw new IllegalArgumentException(
+                    "Invalid specification map with keys: $keys"
+            )
         }
     }
 
