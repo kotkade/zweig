@@ -40,6 +40,7 @@ import org.codehaus.groovy.ast.expr.StaticMethodCallExpression
 import org.codehaus.groovy.ast.expr.VariableExpression
 import org.codehaus.groovy.ast.stmt.BlockStatement
 import org.codehaus.groovy.ast.stmt.ExpressionStatement
+import org.codehaus.groovy.ast.stmt.ReturnStatement
 import org.codehaus.groovy.ast.stmt.Statement
 import org.codehaus.groovy.runtime.NullObject
 
@@ -73,6 +74,8 @@ class ZweigBuilderCategory {
 
     static final mapToZweig = [
             variable: { new VariableExpression(it["variable"]) },
+
+            return: { new ReturnStatement(it["return"].toZweig()) },
 
             method: {
                 def methodName = it["method"]

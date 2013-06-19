@@ -16,6 +16,7 @@ import org.codehaus.groovy.ast.expr.StaticMethodCallExpression
 import org.codehaus.groovy.ast.expr.VariableExpression
 import org.codehaus.groovy.ast.stmt.BlockStatement
 import org.codehaus.groovy.ast.stmt.ExpressionStatement
+import org.codehaus.groovy.ast.stmt.ReturnStatement
 import org.codehaus.groovy.ast.stmt.Statement
 import spock.lang.Specification
 
@@ -81,7 +82,7 @@ class TestZweigBuilder extends Specification {
         AstAssert.assertSyntaxTree(target, z)
     }
 
-    def "Variables are a map with a variable key"() {
+    def "Variables dispatch on the 'variable' key"() {
         when:
         def z = ZweigBuilder.fromSpec([variable: "x"])
 
@@ -89,7 +90,20 @@ class TestZweigBuilder extends Specification {
         AstAssert.assertSyntaxTree(new VariableExpression("x"), z)
     }
 
-    def "Methods are specified as maps"() {
+    def "Return statements dispatch on the 'return' key"() {
+        given:
+        def target = new ReturnStatement(
+                new ConstantExpression("foo")
+        )
+
+        when:
+        def z = ZweigBuilder.fromSpec([return: "foo"])
+
+        then:
+        AstAssert.assertSyntaxTree(target, z)
+    }
+
+    def "Methods definitions dispatch on the 'method' key"() {
         given:
         def target = new MethodNode(
                 "someMethod",
@@ -123,7 +137,7 @@ class TestZweigBuilder extends Specification {
         AstAssert.assertSyntaxTree(target, z)
     }
 
-    def "Method calls are specified as maps"() {
+    def "Method calls dispatch on the 'call' key"() {
         given:
         def target = new MethodCallExpression(
                 new VariableExpression("foo"),
@@ -144,7 +158,7 @@ class TestZweigBuilder extends Specification {
         AstAssert.assertSyntaxTree(target, z)
     }
 
-    def "Static method calls are specified as maps"() {
+    def "Static method calls dispatch on the 'staticCall' key"() {
         given:
         def target = new StaticMethodCallExpression(
                 ClassHelper.make(String, false),
@@ -165,7 +179,7 @@ class TestZweigBuilder extends Specification {
         AstAssert.assertSyntaxTree(target, z)
     }
 
-    def "Constructors are specified as maps"() {
+    def "Constructors dispatch on the 'constructor' key"() {
         given:
         def target = new ConstructorNode(
                 Modifier.PUBLIC,
@@ -201,7 +215,7 @@ class TestZweigBuilder extends Specification {
         AstAssert.assertSyntaxTree(target, z)
     }
 
-    def "Constructor calls are specified by maps"() {
+    def "Constructor calls dispatch on the 'construct' key"() {
         given:
         def target = new ConstructorCallExpression(
                 ClassHelper.make(Integer, false),
