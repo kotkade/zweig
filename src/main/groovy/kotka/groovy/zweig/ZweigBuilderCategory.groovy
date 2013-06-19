@@ -39,6 +39,7 @@ import org.codehaus.groovy.ast.expr.ListExpression
 import org.codehaus.groovy.ast.expr.MapEntryExpression
 import org.codehaus.groovy.ast.expr.MapExpression
 import org.codehaus.groovy.ast.expr.MethodCallExpression
+import org.codehaus.groovy.ast.expr.PropertyExpression
 import org.codehaus.groovy.ast.expr.StaticMethodCallExpression
 import org.codehaus.groovy.ast.expr.VariableExpression
 import org.codehaus.groovy.ast.stmt.BlockStatement
@@ -156,6 +157,13 @@ class ZweigBuilderCategory {
                         it["set"].toZweig(),
                         new Token(Types.EQUALS, "=", -1, -1),
                         it["to"].toZweig()
+                )
+            },
+
+            property: {
+                new PropertyExpression(
+                        (it["on"] ?: [variable: this]).toZweig(),
+                        it["property"]
                 )
             }
     ]

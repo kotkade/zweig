@@ -15,6 +15,7 @@ import org.codehaus.groovy.ast.expr.ListExpression
 import org.codehaus.groovy.ast.expr.MapEntryExpression
 import org.codehaus.groovy.ast.expr.MapExpression
 import org.codehaus.groovy.ast.expr.MethodCallExpression
+import org.codehaus.groovy.ast.expr.PropertyExpression
 import org.codehaus.groovy.ast.expr.StaticMethodCallExpression
 import org.codehaus.groovy.ast.expr.VariableExpression
 import org.codehaus.groovy.ast.stmt.BlockStatement
@@ -214,6 +215,17 @@ class TestZweigBuilder extends Specification {
 
         when:
         def z = ZweigBuilder.fromSpec([set: [variable: "foo"], to: 5])
+
+        then:
+        AstAssert.assertSyntaxTree(target, z)
+    }
+
+    def "Property access dispatches on the 'property' key"() {
+        given:
+        def target = new PropertyExpression(new VariableExpression("foo"), "bar")
+
+        when:
+        def z = ZweigBuilder.fromSpec([property: "bar", on: [variable: "foo"]])
 
         then:
         AstAssert.assertSyntaxTree(target, z)
