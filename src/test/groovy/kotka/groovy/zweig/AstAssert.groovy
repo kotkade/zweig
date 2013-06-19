@@ -29,6 +29,7 @@ import org.codehaus.groovy.ast.expr.ArgumentListExpression
 import org.codehaus.groovy.ast.expr.AnnotationConstantExpression
 import org.codehaus.groovy.ast.AnnotationNode
 import org.codehaus.groovy.ast.expr.AttributeExpression
+import org.codehaus.groovy.syntax.Token
 import org.junit.Assert
 
 /*
@@ -370,7 +371,7 @@ public class AstAssert {
     static void assertSyntaxTree(expected, actual) {
         if (expected == null && actual == null) return
 
-        if (expected instanceof ASTNode) {
+        if (expected instanceof ASTNode || expected instanceof Token) {
             assertSyntaxTreeNode(expected, actual)
             return
         }
