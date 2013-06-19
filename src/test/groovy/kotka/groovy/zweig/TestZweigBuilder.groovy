@@ -11,6 +11,8 @@ import org.codehaus.groovy.ast.expr.ClassExpression
 import org.codehaus.groovy.ast.expr.ConstantExpression
 import org.codehaus.groovy.ast.expr.ConstructorCallExpression
 import org.codehaus.groovy.ast.expr.ListExpression
+import org.codehaus.groovy.ast.expr.MapEntryExpression
+import org.codehaus.groovy.ast.expr.MapExpression
 import org.codehaus.groovy.ast.expr.MethodCallExpression
 import org.codehaus.groovy.ast.expr.StaticMethodCallExpression
 import org.codehaus.groovy.ast.expr.VariableExpression
@@ -67,7 +69,7 @@ class TestZweigBuilder extends Specification {
                 z)
     }
 
-    def "List are constants"() {
+    def "Lists are constants"() {
         given:
         def target = new ListExpression([
             new ConstantExpression(1),
@@ -77,6 +79,26 @@ class TestZweigBuilder extends Specification {
 
         when:
         def z = ZweigBuilder.fromSpec([list: [1, 2, 3]])
+
+        then:
+        AstAssert.assertSyntaxTree(target, z)
+    }
+
+    def "Maps are constants"() {
+        given:
+        def target = new MapExpression([
+                new MapEntryExpression(
+                        new ConstantExpression("foo"),
+                        new ConstantExpression(1)
+                ),
+                new MapEntryExpression(
+                        new ConstantExpression("bar"),
+                        new ConstantExpression(2)
+                )
+        ])
+
+        when:
+        def z = ZweigBuilder.fromSpec([map: [foo: 1, bar: 2]])
 
         then:
         AstAssert.assertSyntaxTree(target, z)

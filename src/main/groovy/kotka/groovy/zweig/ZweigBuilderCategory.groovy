@@ -35,6 +35,8 @@ import org.codehaus.groovy.ast.expr.ConstantExpression
 import org.codehaus.groovy.ast.expr.ConstructorCallExpression
 import org.codehaus.groovy.ast.expr.Expression
 import org.codehaus.groovy.ast.expr.ListExpression
+import org.codehaus.groovy.ast.expr.MapEntryExpression
+import org.codehaus.groovy.ast.expr.MapExpression
 import org.codehaus.groovy.ast.expr.MethodCallExpression
 import org.codehaus.groovy.ast.expr.StaticMethodCallExpression
 import org.codehaus.groovy.ast.expr.VariableExpression
@@ -79,6 +81,12 @@ class ZweigBuilderCategory {
 
             list: { m ->
                 new ListExpression(m["list"].collect { it.toZweig() })
+            },
+
+            map: { m ->
+                new MapExpression(m["map"].collect { k, v ->
+                    new MapEntryExpression(k.toZweig(), v.toZweig())
+                })
             },
 
             method: {
