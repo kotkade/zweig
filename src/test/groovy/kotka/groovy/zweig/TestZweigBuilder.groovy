@@ -245,9 +245,18 @@ class TestZweigBuilder extends Specification {
     /* toClassNode */
     def "toClassNode works on Classes"() {
         expect:
-        withCategory {
-            String.toClassNode() instanceof ClassNode
-        }
+        AstAssert.assertSyntaxTree(
+                ClassHelper.make(String, false),
+                withCategory { String.toClassNode() }
+        )
+    }
+
+    def "toClassNode works on Strings"() {
+        expect:
+        AstAssert.assertSyntaxTree(
+                ClassHelper.make(String, false),
+                withCategory { "java.lang.String".toClassNode() }
+        )
     }
 
     def "toClassNode is idempotent"() {

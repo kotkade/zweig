@@ -164,6 +164,10 @@ class ZweigBuilderCategory {
         ClassHelper.make(c, false)
     }
 
+    static toClassNode(String s) {
+        Class.forName(s).toClassNode()
+    }
+
     /* toStatement */
     static toStatement(Statement s) {
         s
