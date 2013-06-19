@@ -41,6 +41,11 @@ class TestZweigBuilder extends Specification {
         )
     }
 
+    def "null is constant"() {
+        expect:
+        ZweigBuilder.fromSpec(null) == ConstantExpression.NULL
+    }
+
     def "Classes are constants"() {
         when:
         def z = ZweigBuilder.fromSpec(String)

@@ -55,6 +55,10 @@ class ZweigBuilderCategory {
         new ConstantExpression(s)
     }
 
+    static toZweig(NullObject _null) {
+        ConstantExpression.NULL
+    }
+
     static toZweig(Class c) {
         new ClassExpression(c.toClassNode())
     }
