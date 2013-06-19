@@ -68,14 +68,18 @@ class ZweigBuilderCategory {
         new ClassExpression(c.toClassNode())
     }
 
-    static toZweig(List l) {
-        new ListExpression(l.collect { it.toZweig() })
-    }
-
     static final mapToZweig = [
-            variable: { new VariableExpression(it["variable"]) },
+            variable: {
+                new VariableExpression(it["variable"])
+            },
 
-            return: { new ReturnStatement(it["return"].toZweig()) },
+            return: {
+                new ReturnStatement(it["return"].toZweig())
+            },
+
+            list: { m ->
+                new ListExpression(m["list"].collect { it.toZweig() })
+            },
 
             method: {
                 def methodName = it["method"]

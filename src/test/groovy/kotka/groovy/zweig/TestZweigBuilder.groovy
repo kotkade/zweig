@@ -76,7 +76,7 @@ class TestZweigBuilder extends Specification {
         ])
 
         when:
-        def z = ZweigBuilder.fromSpec([1, 2, 3])
+        def z = ZweigBuilder.fromSpec([list: [1, 2, 3]])
 
         then:
         AstAssert.assertSyntaxTree(target, z)
