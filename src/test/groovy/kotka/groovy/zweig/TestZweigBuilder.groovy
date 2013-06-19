@@ -33,7 +33,7 @@ class TestZweigBuilder extends Specification {
         value << [ 1, 1.5 ]
     }
 
-    def "String are constants"() {
+    def "Strings are constants"() {
         expect:
         AstAssert.assertSyntaxTree(
                 new ConstantExpression("foo"),
@@ -44,6 +44,16 @@ class TestZweigBuilder extends Specification {
     def "null is constant"() {
         expect:
         ZweigBuilder.fromSpec(null) == ConstantExpression.NULL
+    }
+
+    def "Booleans are constants"() {
+        expect:
+        ZweigBuilder.fromSpec(b) == bExpr
+
+        where:
+        b     | bExpr
+        true  | ConstantExpression.TRUE
+        false | ConstantExpression.FALSE
     }
 
     def "Classes are constants"() {
