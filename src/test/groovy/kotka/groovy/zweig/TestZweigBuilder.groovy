@@ -22,15 +22,23 @@ import spock.lang.Specification
 import java.lang.reflect.Modifier
 
 class TestZweigBuilder extends Specification {
-    def "Strings and Numbers are constants"() {
-        when:
-        def z = ZweigBuilder.fromSpec(value)
-
-        then:
-        AstAssert.assertSyntaxTree(new ConstantExpression(value), z)
+    def "Numbers are constants"() {
+        expect:
+        AstAssert.assertSyntaxTree(
+                new ConstantExpression(value),
+                ZweigBuilder.fromSpec(value)
+        )
 
         where:
-        value << [ 1, 1.5, "foo" ]
+        value << [ 1, 1.5 ]
+    }
+
+    def "String are constants"() {
+        expect:
+        AstAssert.assertSyntaxTree(
+                new ConstantExpression("foo"),
+                ZweigBuilder.fromSpec("foo")
+        )
     }
 
     def "Classes are constants"() {
