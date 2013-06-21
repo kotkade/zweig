@@ -35,6 +35,7 @@ import org.codehaus.groovy.ast.expr.ClassExpression
 import org.codehaus.groovy.ast.expr.ConstantExpression
 import org.codehaus.groovy.ast.expr.ConstructorCallExpression
 import org.codehaus.groovy.ast.expr.Expression
+import org.codehaus.groovy.ast.expr.FieldExpression
 import org.codehaus.groovy.ast.expr.ListExpression
 import org.codehaus.groovy.ast.expr.MapEntryExpression
 import org.codehaus.groovy.ast.expr.MapExpression
@@ -164,6 +165,12 @@ class ZweigBuilderCategory {
                 new PropertyExpression(
                         (it["of"] ?: [variable: this]).toZweig(),
                         it["property"]
+                )
+            },
+
+            field: {
+                new FieldExpression(
+                        it["of"].toClassNode().getDeclaredField(it["field"])
                 )
             }
     ]

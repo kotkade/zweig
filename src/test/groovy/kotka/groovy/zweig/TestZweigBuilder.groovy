@@ -11,6 +11,7 @@ import org.codehaus.groovy.ast.expr.BinaryExpression
 import org.codehaus.groovy.ast.expr.ClassExpression
 import org.codehaus.groovy.ast.expr.ConstantExpression
 import org.codehaus.groovy.ast.expr.ConstructorCallExpression
+import org.codehaus.groovy.ast.expr.FieldExpression
 import org.codehaus.groovy.ast.expr.ListExpression
 import org.codehaus.groovy.ast.expr.MapEntryExpression
 import org.codehaus.groovy.ast.expr.MapExpression
@@ -226,6 +227,24 @@ class TestZweigBuilder extends Specification {
 
         when:
         def z = ZweigBuilder.fromSpec([property: "bar", of: [variable: "foo"]])
+
+        then:
+        AstAssert.assertSyntaxTree(target, z)
+    }
+
+    class Dummy {
+        def String foo
+    }
+
+    def "Field access dispatches on the 'field' key"() {
+        given:
+        def klass  = ClassHelper.make(Dummy, false)
+        def target = new FieldExpression(
+                klass.getDeclaredField("foo")
+        )
+
+        when:
+        def z = ZweigBuilder.fromSpec([field: "foo", of: Dummy])
 
         then:
         AstAssert.assertSyntaxTree(target, z)

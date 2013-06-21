@@ -168,6 +168,26 @@ package kotka.groovy.zweig
  *   foo.bar
  * </code></pre>
  *
+ * <h3>Field access on <code>this</code> (<em>not</em> via getter/setter)</h3>
+ * <dl>
+ *     <dt><code>field</code>
+ *     <dd>the name of the field
+ *
+ *     <dt><code>of</code>
+ *     <dd>the class of <code>this</code>
+ * </dl>
+ *
+ * <p>
+ * Example:
+ *
+ * <pre><code>   // spec
+ *   [field: "size"
+ *    of:    String]
+ *
+ *   // corresponding code
+ *   this.size
+ * </code></pre>
+ *
  * <h3>Method call</h3>
  * <dl>
  *     <dt><code>call</code>
