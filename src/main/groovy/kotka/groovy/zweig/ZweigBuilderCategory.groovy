@@ -162,7 +162,7 @@ class ZweigBuilderCategory {
 
             property: {
                 new PropertyExpression(
-                        (it["on"] ?: [variable: this]).toZweig(),
+                        (it["of"] ?: [variable: this]).toZweig(),
                         it["property"]
                 )
             }

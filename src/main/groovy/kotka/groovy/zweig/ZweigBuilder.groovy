@@ -152,7 +152,7 @@ package kotka.groovy.zweig
  *     <dt><code>property</code>
  *     <dd>the name of the property
  *
- *     <dt><code>on</code>
+ *     <dt><code>of</code>
  *     <dd>the receiver of the accessor call<br>
  *         <em>Default:</em> <code>this</code>
  * </dl>
@@ -162,7 +162,7 @@ package kotka.groovy.zweig
  *
  * <pre><code>   // spec
  *   [property: "bar"
- *    on:       [variable: "foo"]]
+ *    of:       [variable: "foo"]]
  *
  *   // corresponding code
  *   foo.bar

@@ -225,7 +225,7 @@ class TestZweigBuilder extends Specification {
         def target = new PropertyExpression(new VariableExpression("foo"), "bar")
 
         when:
-        def z = ZweigBuilder.fromSpec([property: "bar", on: [variable: "foo"]])
+        def z = ZweigBuilder.fromSpec([property: "bar", of: [variable: "foo"]])
 
         then:
         AstAssert.assertSyntaxTree(target, z)
