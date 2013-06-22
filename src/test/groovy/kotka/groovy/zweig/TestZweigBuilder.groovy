@@ -109,6 +109,21 @@ class TestZweigBuilder extends Specification {
         AstAssert.assertSyntaxTree(target, z)
     }
 
+    def "toZweig is idempotent"() {
+        expect:
+        AstAssert.assertSyntaxTree(x, withCategory { x.toZweig() })
+
+        where:
+        x << [
+                new ConstantExpression("foo"),
+                new VariableExpression("foo"),
+                new ListExpression([
+                        new ConstantExpression("foo"),
+                        new VariableExpression("foo"),
+                ])
+        ]
+    }
+
     def "Variables dispatch on the 'variable' key"() {
         when:
         def z = ZweigBuilder.fromSpec([variable: "x"])

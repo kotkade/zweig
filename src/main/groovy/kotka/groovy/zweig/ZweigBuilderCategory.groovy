@@ -23,6 +23,7 @@
 
 package kotka.groovy.zweig
 
+import org.codehaus.groovy.ast.ASTNode
 import org.codehaus.groovy.ast.ClassHelper
 import org.codehaus.groovy.ast.ClassNode
 import org.codehaus.groovy.ast.ConstructorNode
@@ -73,6 +74,10 @@ class ZweigBuilderCategory {
 
     static toZweig(Class c) {
         new ClassExpression(c.toClassNode())
+    }
+
+    static toZweig(ASTNode x) {
+        x
     }
 
     static final mapToZweig = [
