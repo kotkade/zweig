@@ -292,6 +292,16 @@ class TestZweigBuilder extends Specification {
         AstAssert.assertSyntaxTree(target, z)
     }
 
+    def "Field nodes are constants"() {
+        given:
+        def klass  = ClassHelper.make(Dummy, false)
+        def field  = klass.getField("foo")
+        def target = new FieldExpression(field)
+
+        expect:
+        AstAssert.assertSyntaxTree(target, ZweigBuilder.fromSpec(field))
+    }
+
     def "Constructors dispatch on the 'constructor' key"() {
         given:
         def target = new ConstructorNode(

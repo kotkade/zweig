@@ -27,6 +27,7 @@ import org.codehaus.groovy.ast.ASTNode
 import org.codehaus.groovy.ast.ClassHelper
 import org.codehaus.groovy.ast.ClassNode
 import org.codehaus.groovy.ast.ConstructorNode
+import org.codehaus.groovy.ast.FieldNode
 import org.codehaus.groovy.ast.MethodNode
 import org.codehaus.groovy.ast.Parameter
 import org.codehaus.groovy.ast.VariableScope
@@ -78,6 +79,10 @@ class ZweigBuilderCategory {
 
     static toZweig(ClassNode c) {
         new ClassExpression(c)
+    }
+
+    static toZweig(FieldNode f) {
+        new FieldExpression(f)
     }
 
     static toZweig(ASTNode x) {
