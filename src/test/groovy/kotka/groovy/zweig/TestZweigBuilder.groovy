@@ -274,6 +274,24 @@ class TestZweigBuilder extends Specification {
         AstAssert.assertSyntaxTree(target, z)
     }
 
+    class Dummy2 extends Dummy {
+        def String bar
+    }
+
+    def "Field access works with the inheritance chain"() {
+        given:
+        def klass  = ClassHelper.make(Dummy2, false)
+        def target = new FieldExpression(
+                klass.getField("foo")
+        )
+
+        when:
+        def z = ZweigBuilder.fromSpec([field: "foo", of: Dummy2])
+
+        then:
+        AstAssert.assertSyntaxTree(target, z)
+    }
+
     def "Constructors dispatch on the 'constructor' key"() {
         given:
         def target = new ConstructorNode(

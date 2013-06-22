@@ -179,7 +179,7 @@ class ZweigBuilderCategory {
 
             field: {
                 new FieldExpression(
-                        it["of"].toClassNode().getDeclaredField(it["field"])
+                        it["of"].toClassNode().getField(it["field"])
                 )
             }
     ]
