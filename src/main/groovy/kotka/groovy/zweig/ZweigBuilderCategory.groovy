@@ -73,7 +73,11 @@ class ZweigBuilderCategory {
     }
 
     static toZweig(Class c) {
-        new ClassExpression(c.toClassNode())
+        c.toClassNode().toZweig()
+    }
+
+    static toZweig(ClassNode c) {
+        new ClassExpression(c)
     }
 
     static toZweig(ASTNode x) {

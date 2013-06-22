@@ -74,6 +74,15 @@ class TestZweigBuilder extends Specification {
                 z)
     }
 
+    def "ClassNodes are constants"() {
+        given:
+        def klass = ClassHelper.make(String, false)
+
+        expect:
+        AstAssert.assertSyntaxTree(new ClassExpression(klass),
+                withCategory { klass.toZweig() })
+    }
+
     def "Lists are constants"() {
         given:
         def target = new ListExpression([
