@@ -209,7 +209,7 @@ class TestZweigBuilder extends Specification {
         AstAssert.assertSyntaxTree(target, z)
     }
 
-    def "Static method calls dispatch on the 'staticCall' key"() {
+    def "Static method calls dispatch on the 'callStatic' key"() {
         given:
         def target = new StaticMethodCallExpression(
                 ClassHelper.make(String, false),
