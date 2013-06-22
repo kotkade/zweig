@@ -30,6 +30,21 @@ dependencies {
     }
 }
 
+task sourcesJar(type: Jar) {
+    classifier = "sources"
+    from project.sourceSets.main.allSource
+}
+
+task groovyDocJar(type: Jar) {
+    classifier = "javadoc"
+    from project.groovydoc.outputs
+}
+
+artifacts {
+    archives sourcesJar
+    archives groovyDocJar
+}
+
 task wrapper(type: Wrapper) {
     gradleVersion = "1.6"
 }
