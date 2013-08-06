@@ -490,6 +490,6 @@ class TestZweigBuilder extends Specification {
 
     /* Helper */
     static withCategory(Closure body) {
-        use(ZweigBuilderCategory) { body() }
+        use(ExpressionCategory, StatementCategory, NodeCategory, InternalCategory) { body() }
     }
 }

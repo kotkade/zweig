@@ -368,7 +368,7 @@ class ZweigBuilder {
      * @return        the corresponding expression AST data structure
      */
     def static toExpression(spec) {
-        use(ZweigBuilderCategory) {
+        use(ExpressionCategory, StatementCategory, NodeCategory, InternalCategory) {
             spec.toExpression()
         }
     }
@@ -382,7 +382,7 @@ class ZweigBuilder {
      * @return        the corresponding statement AST data structure
      */
     def static toStatement(spec) {
-        use(ZweigBuilderCategory) {
+        use(ExpressionCategory, StatementCategory, NodeCategory, InternalCategory) {
             spec.toStatement()
         }
     }
@@ -396,7 +396,7 @@ class ZweigBuilder {
      * @return        the corresponding node AST data structure
      */
     def static toNode(spec) {
-        use(ZweigBuilderCategory) {
+        use(ExpressionCategory, StatementCategory, NodeCategory, InternalCategory) {
             spec.toNode()
         }
     }
