@@ -24,7 +24,9 @@
 package kotka.groovy.zweig
 
 import org.codehaus.groovy.ast.expr.Expression
+import org.codehaus.groovy.ast.stmt.EmptyStatement
 import org.codehaus.groovy.ast.stmt.ExpressionStatement
+import org.codehaus.groovy.ast.stmt.IfStatement
 import org.codehaus.groovy.ast.stmt.ReturnStatement
 import org.codehaus.groovy.ast.stmt.Statement
 
@@ -41,7 +43,18 @@ class StatementCategory {
     static final mapToStatement = [
             return: {
                 new ReturnStatement(it["return"].toExpression())
+            },
+
+            if: {
+                new IfStatement(
+                        it["if"].toBooleanExpression(),
+                        it["then"].toStatement(),
+                        it.containsKey("else") ?
+                            it["else"].toStatement() :
+                            EmptyStatement.INSTANCE
+                )
             }
+
     ]
 
     static toStatement(Map m) {

@@ -27,6 +27,8 @@ import org.codehaus.groovy.ast.ClassHelper
 import org.codehaus.groovy.ast.ClassNode
 import org.codehaus.groovy.ast.Parameter
 import org.codehaus.groovy.ast.expr.ArgumentListExpression
+import org.codehaus.groovy.ast.expr.BooleanExpression
+import org.codehaus.groovy.ast.expr.Expression
 import org.codehaus.groovy.runtime.NullObject
 
 import java.lang.reflect.Modifier
@@ -91,5 +93,18 @@ class InternalCategory {
 
     static toModifier(List l) {
         l.inject(0) { mod, m -> mod | m.toModifier() }
+    }
+
+    /* toBooleanExpression */
+    static toBooleanExpression(BooleanExpression b) {
+        b
+    }
+
+    static toBooleanExpression(Expression e) {
+        new BooleanExpression(e)
+    }
+
+    static toBooleanExpression(Object o) {
+        o.toExpression().toBooleanExpression()
     }
 }

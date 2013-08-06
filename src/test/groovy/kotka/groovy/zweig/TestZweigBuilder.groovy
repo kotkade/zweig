@@ -8,6 +8,7 @@ import org.codehaus.groovy.ast.Parameter
 import org.codehaus.groovy.ast.VariableScope
 import org.codehaus.groovy.ast.expr.ArgumentListExpression
 import org.codehaus.groovy.ast.expr.BinaryExpression
+import org.codehaus.groovy.ast.expr.BooleanExpression
 import org.codehaus.groovy.ast.expr.ClassExpression
 import org.codehaus.groovy.ast.expr.ConstantExpression
 import org.codehaus.groovy.ast.expr.ConstructorCallExpression
@@ -20,7 +21,9 @@ import org.codehaus.groovy.ast.expr.PropertyExpression
 import org.codehaus.groovy.ast.expr.StaticMethodCallExpression
 import org.codehaus.groovy.ast.expr.VariableExpression
 import org.codehaus.groovy.ast.stmt.BlockStatement
+import org.codehaus.groovy.ast.stmt.EmptyStatement
 import org.codehaus.groovy.ast.stmt.ExpressionStatement
+import org.codehaus.groovy.ast.stmt.IfStatement
 import org.codehaus.groovy.ast.stmt.ReturnStatement
 import org.codehaus.groovy.ast.stmt.Statement
 import org.codehaus.groovy.syntax.Token
@@ -149,6 +152,43 @@ class TestZweigBuilder extends Specification {
 
         when:
         def z = ZweigBuilder.toStatement([return: "foo"])
+
+        then:
+        AstAssert.assertSyntaxTree(target, z)
+    }
+
+    def "If statements dispatch on the 'if' key"() {
+        given:
+        def target = new IfStatement(
+                new BooleanExpression(ConstantExpression.TRUE),
+                new ExpressionStatement(new ConstantExpression("foo")),
+                new ExpressionStatement(new ConstantExpression("bar"))
+        )
+
+        when:
+        def z = ZweigBuilder.toStatement([
+                if:   true,
+                then: "foo",
+                else: "bar"
+        ])
+
+        then:
+        AstAssert.assertSyntaxTree(target, z)
+    }
+
+    def "If statements' 'else' branch is optional"() {
+        given:
+        def target = new IfStatement(
+                new BooleanExpression(ConstantExpression.TRUE),
+                new ExpressionStatement(new ConstantExpression("foo")),
+                EmptyStatement.INSTANCE
+        )
+
+        when:
+        def z = ZweigBuilder.toStatement([
+                if:   true,
+                then: "foo"
+        ])
 
         then:
         AstAssert.assertSyntaxTree(target, z)
