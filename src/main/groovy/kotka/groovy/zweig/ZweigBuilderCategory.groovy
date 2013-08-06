@@ -56,84 +56,58 @@ import org.codehaus.groovy.syntax.Types
 import java.lang.reflect.Modifier
 
 class ZweigBuilderCategory {
-    /* toZweig */
-    static toZweig(Number n) {
+    /* toExpression */
+    static toExpression(Number n) {
         new ConstantExpression(n)
     }
 
-    static toZweig(String s) {
+    static toExpression(String s) {
         new ConstantExpression(s)
     }
 
-    static toZweig(NullObject _null) {
+    static toExpression(NullObject _null) {
         ConstantExpression.NULL
     }
 
-    static toZweig(Boolean b) {
+    static toExpression(Boolean b) {
         b ? ConstantExpression.TRUE : ConstantExpression.FALSE
     }
 
-    static toZweig(Class c) {
-        c.toClassNode().toZweig()
+    static toExpression(Class c) {
+        c.toClassNode().toExpression()
     }
 
-    static toZweig(ClassNode c) {
+    static toExpression(ClassNode c) {
         new ClassExpression(c)
     }
 
-    static toZweig(FieldNode f) {
+    static toExpression(FieldNode f) {
         new FieldExpression(f)
     }
 
-    static toZweig(ASTNode x) {
+    static toExpression(Expression x) {
         x
     }
 
-    static final mapToZweig = [
+    static final mapToExpression = [
             variable: {
                 new VariableExpression(it["variable"])
             },
 
-            return: {
-                new ReturnStatement(it["return"].toZweig())
-            },
-
             list: { m ->
-                new ListExpression(m["list"].collect { it.toZweig() })
+                new ListExpression(m["list"].collect { it.toExpression() })
             },
 
             map: { m ->
                 new MapExpression(m["map"].collect { k, v ->
-                    new MapEntryExpression(k.toZweig(), v.toZweig())
+                    new MapEntryExpression(k.toExpression(), v.toExpression())
                 })
-            },
-
-            method: {
-                def methodName = it["method"]
-                def modifier   = it["modifier"] ?: Modifier.PUBLIC
-
-                def parameters = it["arguments"].collect  { it.toParameter() }
-                def exceptions = it["exceptions"].collect { it.toClassNode() }
-
-                def returnType = it["returnType"] ?: ClassHelper.OBJECT_TYPE
-                def body       = it["body"].collect {
-                    it.toStatement()
-                }
-
-                new MethodNode(
-                    methodName,
-                    modifier.toModifier(),
-                    returnType.toClassNode(),
-                    parameters as Parameter[],
-                    exceptions as ClassNode[],
-                    new BlockStatement(body, new VariableScope())
-                )
             },
 
             call: {
                 new MethodCallExpression(
-                        it["on"].toZweig(),
-                        it["call"].toZweig(),
+                        it["on"].toExpression(),
+                        it["call"].toExpression(),
                         it["with"].toArgumentList()
                 )
             },
@@ -146,20 +120,6 @@ class ZweigBuilderCategory {
                 )
             },
 
-            constructor: {
-                def modifier   = it["modifier"] ?: Modifier.PUBLIC
-                def parameters = it["constructor"].collect { it.toParameter() }
-                def exceptions = it["exceptions"].collect  { it.toClassNode() }
-                def body       = it["body"].collect { it.toStatement() }
-
-                new ConstructorNode(
-                        modifier.toModifier(),
-                        parameters as Parameter[],
-                        exceptions as ClassNode[],
-                        new BlockStatement(body, new VariableScope())
-                )
-            },
-
             construct: {
                 new ConstructorCallExpression(
                         it["construct"].toClassNode(),
@@ -169,15 +129,15 @@ class ZweigBuilderCategory {
 
             set: {
                 new BinaryExpression(
-                        it["set"].toZweig(),
+                        it["set"].toExpression(),
                         new Token(Types.EQUALS, "=", -1, -1),
-                        it["to"].toZweig()
+                        it["to"].toExpression()
                 )
             },
 
             property: {
                 new PropertyExpression(
-                        (it["of"] ?: [variable: this]).toZweig(),
+                        (it["of"] ?: [variable: this]).toExpression(),
                         it["property"]
                 )
             },
@@ -189,13 +149,13 @@ class ZweigBuilderCategory {
             }
     ]
 
-    static toZweig(Map m) {
+    static toExpression(Map m) {
         def action = m.keySet().find {
-            mapToZweig.containsKey(it)
+            mapToExpression.containsKey(it)
         }
 
         if (action != null) {
-            mapToZweig[action](m)
+            mapToExpression[action](m)
         } else {
             def keys = m.keySet().join ", "
             throw new IllegalArgumentException(
@@ -237,8 +197,83 @@ class ZweigBuilderCategory {
         new ExpressionStatement(e)
     }
 
+    static final mapToStatement = [
+            return: {
+                new ReturnStatement(it["return"].toExpression())
+            }
+    ]
+
+    static toStatement(Map m) {
+        def action = m.keySet().find {
+            mapToStatement.containsKey(it)
+        }
+
+        if (action == null)
+            m.toExpression().toStatement()
+        else
+            mapToStatement[action](m)
+    }
+
     static toStatement(Object o) {
-        o.toZweig().toStatement()
+        o.toExpression().toStatement()
+    }
+
+    /* toNode */
+    static toNode(ASTNode n) {
+        n
+    }
+
+    static final mapToNode = [
+            constructor: {
+                def modifier   = it["modifier"] ?: Modifier.PUBLIC
+                def parameters = it["constructor"].collect { it.toParameter() }
+                def exceptions = it["exceptions"].collect  { it.toClassNode() }
+                def body       = it["body"].collect { it.toStatement() }
+
+                new ConstructorNode(
+                        modifier.toModifier(),
+                        parameters as Parameter[],
+                        exceptions as ClassNode[],
+                        new BlockStatement(body, new VariableScope())
+                )
+            },
+
+            method: {
+                def methodName = it["method"]
+                def modifier   = it["modifier"] ?: Modifier.PUBLIC
+
+                def parameters = it["arguments"].collect  { it.toParameter() }
+                def exceptions = it["exceptions"].collect { it.toClassNode() }
+
+                def returnType = it["returnType"] ?: ClassHelper.OBJECT_TYPE
+                def body       = it["body"].collect {
+                    it.toStatement()
+                }
+
+                new MethodNode(
+                        methodName,
+                        modifier.toModifier(),
+                        returnType.toClassNode(),
+                        parameters as Parameter[],
+                        exceptions as ClassNode[],
+                        new BlockStatement(body, new VariableScope())
+                )
+            }
+    ]
+
+    static toNode(Map m) {
+        def action = m.keySet().find {
+            mapToNode.containsKey(it)
+        }
+
+        if (action != null) {
+            mapToNode[action](m)
+        } else {
+            def keys = m.keySet().join ", "
+            throw new IllegalArgumentException(
+                    "Invalid node specification map with keys: $keys"
+            )
+        }
     }
 
     /* toArgumentList */
@@ -251,7 +286,7 @@ class ZweigBuilderCategory {
     }
 
     static toArgumentList(List l) {
-        new ArgumentListExpression(l.collect { it.toZweig() })
+        new ArgumentListExpression(l.collect { it.toExpression() })
     }
 
     /* toModifier */

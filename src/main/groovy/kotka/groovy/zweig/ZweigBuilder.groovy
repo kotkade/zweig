@@ -26,13 +26,13 @@ package kotka.groovy.zweig
 /**
  * <code>ZweigBuilder</code> translates a high-level AST description
  * into the actual groovy AST representation. The sole entry point is
- * the <code>fromSpec</code> method. All of the below described structures
+ * the <code>toExpression</code> method. All of the below described structures
  * nest arbitrarily.
  *
  * <p>
- * Also <code>fromSpec</code> is idempotent. So you
+ * Also <code>toExpression</code> is idempotent. So you
  * may provide your custom created <code>ASTNodes</code> directly should
- * the need arise. In this case <code>fromSpec</code> will leave them
+ * the need arise. In this case <code>toExpression</code> will leave them
  * alone.
  *
  * <h2>Simple constants</h2>
@@ -361,15 +361,43 @@ package kotka.groovy.zweig
 class ZweigBuilder {
     /**
      * Converts a high-level description of the desired outcome into
-     * the actual groovy AST structure. <code>fromSpec</code> is
+     * the actual groovy expression AST structure. <code>toExpression</code>
+     * is idempotent.
+     *
+     * @param   spec  a high-level AST specification of the expression
+     * @return        the corresponding expression AST data structure
+     */
+    def static toExpression(spec) {
+        use(ZweigBuilderCategory) {
+            spec.toExpression()
+        }
+    }
+
+    /**
+     * Converts a high-level description of the desired outcome into
+     * the actual groovy statement AST structure. <code>toStatement</code>
+     * is idempotent.
+     *
+     * @param   spec  a high-level AST specification of the statement
+     * @return        the corresponding statement AST data structure
+     */
+    def static toStatement(spec) {
+        use(ZweigBuilderCategory) {
+            spec.toStatement()
+        }
+    }
+
+    /**
+     * Converts a high-level description of the desired outcome into
+     * the actual groovy node AST structure. <code>toNode</code> is
      * idempotent.
      *
-     * @param   spec  a high-level AST specification
-     * @return        the corresponding AST data structure
+     * @param   spec  a high-level AST specification of the node
+     * @return        the corresponding node AST data structure
      */
-    def static fromSpec(spec) {
+    def static toNode(spec) {
         use(ZweigBuilderCategory) {
-            spec.toZweig()
+            spec.toNode()
         }
     }
 }

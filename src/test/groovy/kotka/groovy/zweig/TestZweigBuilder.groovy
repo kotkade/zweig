@@ -34,7 +34,7 @@ class TestZweigBuilder extends Specification {
         expect:
         AstAssert.assertSyntaxTree(
                 new ConstantExpression(value),
-                ZweigBuilder.fromSpec(value)
+                ZweigBuilder.toExpression(value)
         )
 
         where:
@@ -45,18 +45,18 @@ class TestZweigBuilder extends Specification {
         expect:
         AstAssert.assertSyntaxTree(
                 new ConstantExpression("foo"),
-                ZweigBuilder.fromSpec("foo")
+                ZweigBuilder.toExpression("foo")
         )
     }
 
     def "null is constant"() {
         expect:
-        ZweigBuilder.fromSpec(null) == ConstantExpression.NULL
+        ZweigBuilder.toExpression(null) == ConstantExpression.NULL
     }
 
     def "Booleans are constants"() {
         expect:
-        ZweigBuilder.fromSpec(b) == bExpr
+        ZweigBuilder.toExpression(b) == bExpr
 
         where:
         b     | bExpr
@@ -66,7 +66,7 @@ class TestZweigBuilder extends Specification {
 
     def "Classes are constants"() {
         when:
-        def z = ZweigBuilder.fromSpec(String)
+        def z = ZweigBuilder.toExpression(String)
 
         then:
         AstAssert.assertSyntaxTree(
@@ -80,7 +80,7 @@ class TestZweigBuilder extends Specification {
 
         expect:
         AstAssert.assertSyntaxTree(new ClassExpression(klass),
-                withCategory { klass.toZweig() })
+                withCategory { klass.toExpression() })
     }
 
     def "Lists are constants"() {
@@ -92,7 +92,7 @@ class TestZweigBuilder extends Specification {
         ])
 
         when:
-        def z = ZweigBuilder.fromSpec([list: [1, 2, 3]])
+        def z = ZweigBuilder.toExpression([list: [1, 2, 3]])
 
         then:
         AstAssert.assertSyntaxTree(target, z)
@@ -112,15 +112,15 @@ class TestZweigBuilder extends Specification {
         ])
 
         when:
-        def z = ZweigBuilder.fromSpec([map: [foo: 1, bar: 2]])
+        def z = ZweigBuilder.toExpression([map: [foo: 1, bar: 2]])
 
         then:
         AstAssert.assertSyntaxTree(target, z)
     }
 
-    def "toZweig is idempotent"() {
+    def "toExpression is idempotent"() {
         expect:
-        AstAssert.assertSyntaxTree(x, withCategory { x.toZweig() })
+        AstAssert.assertSyntaxTree(x, withCategory { x.toExpression() })
 
         where:
         x << [
@@ -135,7 +135,7 @@ class TestZweigBuilder extends Specification {
 
     def "Variables dispatch on the 'variable' key"() {
         when:
-        def z = ZweigBuilder.fromSpec([variable: "x"])
+        def z = ZweigBuilder.toExpression([variable: "x"])
 
         then:
         AstAssert.assertSyntaxTree(new VariableExpression("x"), z)
@@ -148,7 +148,7 @@ class TestZweigBuilder extends Specification {
         )
 
         when:
-        def z = ZweigBuilder.fromSpec([return: "foo"])
+        def z = ZweigBuilder.toStatement([return: "foo"])
 
         then:
         AstAssert.assertSyntaxTree(target, z)
@@ -175,7 +175,7 @@ class TestZweigBuilder extends Specification {
         )
 
         when:
-        def z = ZweigBuilder.fromSpec([
+        def z = ZweigBuilder.toNode([
                 method:     "someMethod",
                 modifier:   ["public", "static"],
                 arguments:  [[foo: String], [bar: Integer]],
@@ -199,7 +199,7 @@ class TestZweigBuilder extends Specification {
         )
 
         when:
-        def z = ZweigBuilder.fromSpec([
+        def z = ZweigBuilder.toExpression([
                 call: "bar",
                 on:   [variable: "foo"],
                 with: [5]
@@ -220,7 +220,7 @@ class TestZweigBuilder extends Specification {
         )
 
         when:
-        def z = ZweigBuilder.fromSpec([
+        def z = ZweigBuilder.toExpression([
                 callStatic: "format",
                 on:         String,
                 with:       ["foo"]
@@ -239,7 +239,7 @@ class TestZweigBuilder extends Specification {
         )
 
         when:
-        def z = ZweigBuilder.fromSpec([set: [variable: "foo"], to: 5])
+        def z = ZweigBuilder.toExpression([set: [variable: "foo"], to: 5])
 
         then:
         AstAssert.assertSyntaxTree(target, z)
@@ -250,7 +250,7 @@ class TestZweigBuilder extends Specification {
         def target = new PropertyExpression(new VariableExpression("foo"), "bar")
 
         when:
-        def z = ZweigBuilder.fromSpec([property: "bar", of: [variable: "foo"]])
+        def z = ZweigBuilder.toExpression([property: "bar", of: [variable: "foo"]])
 
         then:
         AstAssert.assertSyntaxTree(target, z)
@@ -268,7 +268,7 @@ class TestZweigBuilder extends Specification {
         )
 
         when:
-        def z = ZweigBuilder.fromSpec([field: "foo", of: Dummy])
+        def z = ZweigBuilder.toExpression([field: "foo", of: Dummy])
 
         then:
         AstAssert.assertSyntaxTree(target, z)
@@ -286,7 +286,7 @@ class TestZweigBuilder extends Specification {
         )
 
         when:
-        def z = ZweigBuilder.fromSpec([field: "foo", of: Dummy2])
+        def z = ZweigBuilder.toExpression([field: "foo", of: Dummy2])
 
         then:
         AstAssert.assertSyntaxTree(target, z)
@@ -299,7 +299,7 @@ class TestZweigBuilder extends Specification {
         def target = new FieldExpression(field)
 
         expect:
-        AstAssert.assertSyntaxTree(target, ZweigBuilder.fromSpec(field))
+        AstAssert.assertSyntaxTree(target, ZweigBuilder.toExpression(field))
     }
 
     def "Constructors dispatch on the 'constructor' key"() {
@@ -325,7 +325,7 @@ class TestZweigBuilder extends Specification {
         )
 
         when:
-        def z = ZweigBuilder.fromSpec([
+        def z = ZweigBuilder.toNode([
                 constructor: [[foo: String], [bar: Integer]],
                 exceptions:  [IOException],
                 body: [
@@ -348,7 +348,7 @@ class TestZweigBuilder extends Specification {
         )
 
         when:
-        def z = ZweigBuilder.fromSpec([
+        def z = ZweigBuilder.toExpression([
                 construct: Integer,
                 with:      [5]
         ])
@@ -421,7 +421,7 @@ class TestZweigBuilder extends Specification {
         }
     }
 
-    def "toStatement turns things in the domain of toZweig into Statements"() {
+    def "toStatement turns things in the domain of toExpression into Statements"() {
         expect:
         withCategory {
             [variable: "foo"].toStatement() instanceof Statement
