@@ -83,7 +83,7 @@ class TestZweigBuilder extends Specification {
 
         expect:
         AstAssert.assertSyntaxTree(new ClassExpression(klass),
-                ZweigBuilder.withCategory { klass.toExpression() })
+                ZweigBuilder.withCategories { klass.toExpression() })
     }
 
     def "Lists are constants"() {
@@ -123,7 +123,7 @@ class TestZweigBuilder extends Specification {
 
     def "toExpression is idempotent"() {
         expect:
-        AstAssert.assertSyntaxTree(x, ZweigBuilder.withCategory { x.toExpression() })
+        AstAssert.assertSyntaxTree(x, ZweigBuilder.withCategories { x.toExpression() })
 
         where:
         x << [
@@ -404,7 +404,7 @@ class TestZweigBuilder extends Specification {
         def parameter = new Parameter(ClassHelper.make(String, false), "foo")
 
         when:
-        def param = ZweigBuilder.withCategory { [foo: String].toParameter() }
+        def param = ZweigBuilder.withCategories { [foo: String].toParameter() }
 
         then:
         AstAssert.assertSyntaxTree(parameter, param)
@@ -415,7 +415,7 @@ class TestZweigBuilder extends Specification {
         def parameter = new Parameter(ClassHelper.make(String, false), "foo")
 
         expect:
-        ZweigBuilder.withCategory {
+        ZweigBuilder.withCategories {
             parameter.toParameter() instanceof Parameter
         }
     }
@@ -425,7 +425,7 @@ class TestZweigBuilder extends Specification {
         expect:
         AstAssert.assertSyntaxTree(
                 ClassHelper.make(String, false),
-                ZweigBuilder.withCategory { String.toClassNode() }
+                ZweigBuilder.withCategories { String.toClassNode() }
         )
     }
 
@@ -433,13 +433,13 @@ class TestZweigBuilder extends Specification {
         expect:
         AstAssert.assertSyntaxTree(
                 ClassHelper.make(String, false),
-                ZweigBuilder.withCategory { "java.lang.String".toClassNode() }
+                ZweigBuilder.withCategories { "java.lang.String".toClassNode() }
         )
     }
 
     def "toClassNode is idempotent"() {
         expect:
-        ZweigBuilder.withCategory {
+        ZweigBuilder.withCategories {
             ClassHelper.make(String, false).toClassNode() instanceof ClassNode
         }
     }
@@ -447,14 +447,14 @@ class TestZweigBuilder extends Specification {
     /* toStatement */
     def "toStatement turns Expressions into Statements"() {
         expect:
-        ZweigBuilder.withCategory {
+        ZweigBuilder.withCategories {
             new ConstantExpression("foo").toStatement() instanceof Statement
         }
     }
 
     def "toStatement is idempotent"() {
         expect:
-        ZweigBuilder.withCategory {
+        ZweigBuilder.withCategories {
             new ExpressionStatement(
                     new ConstantExpression("foo")).
                     toStatement() instanceof Statement
@@ -463,7 +463,7 @@ class TestZweigBuilder extends Specification {
 
     def "toStatement turns things in the domain of toExpression into Statements"() {
         expect:
-        ZweigBuilder.withCategory {
+        ZweigBuilder.withCategories {
             [variable: "foo"].toStatement() instanceof Statement
         }
     }
@@ -477,7 +477,7 @@ class TestZweigBuilder extends Specification {
         ])
 
         when:
-        def z = ZweigBuilder.withCategory { [5, [variable: "foo"]].toArgumentList() }
+        def z = ZweigBuilder.withCategories { [5, [variable: "foo"]].toArgumentList() }
 
         then:
         AstAssert.assertSyntaxTree(target, z)
@@ -488,14 +488,14 @@ class TestZweigBuilder extends Specification {
         def target = new ArgumentListExpression([])
 
         expect:
-        ZweigBuilder.withCategory {
+        ZweigBuilder.withCategories {
             target.toArgumentList() instanceof ArgumentListExpression
         }
     }
 
     def "toArgumentList on null is the empty argument list"() {
         expect:
-        ZweigBuilder.withCategory {
+        ZweigBuilder.withCategories {
             null.toArgumentList() == ArgumentListExpression.EMPTY_ARGUMENTS
         }
     }
@@ -506,14 +506,14 @@ class TestZweigBuilder extends Specification {
         def m = Modifier.PUBLIC | Modifier.STATIC
 
         expect:
-        ZweigBuilder.withCategory {
+        ZweigBuilder.withCategories {
             m.toModifier() == m
         }
     }
 
     def "toModifier translates Strings"() {
         expect:
-        ZweigBuilder.withCategory {
+        ZweigBuilder.withCategories {
             "public".toModifier() == Modifier.PUBLIC
         }
     }
@@ -523,7 +523,7 @@ class TestZweigBuilder extends Specification {
         def m = Modifier.PUBLIC | Modifier.STATIC
 
         expect:
-        ZweigBuilder.withCategory {
+        ZweigBuilder.withCategories {
             ["public", Modifier.STATIC].toModifier() == m
         }
     }
