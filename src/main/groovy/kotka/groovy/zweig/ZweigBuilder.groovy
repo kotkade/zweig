@@ -25,15 +25,14 @@ package kotka.groovy.zweig
 
 /**
  * <code>ZweigBuilder</code> translates a high-level AST description
- * into the actual groovy AST representation. The sole entry point is
- * the <code>toExpression</code> method. All of the below described structures
- * nest arbitrarily.
+ * into the actual groovy AST representation. The are entry points for
+ * statements as well as expressions and nodes. All of the below described
+ * structures nest arbitrarily.
  *
  * <p>
- * Also <code>toExpression</code> is idempotent. So you
- * may provide your custom created <code>ASTNodes</code> directly should
- * the need arise. In this case <code>toExpression</code> will leave them
- * alone.
+ * All entry points are idempotent. So you may provide your custom created
+ * <code>ASTNodes</code> directly should the need arise. In this case
+ * <code>ZweigBuilder</code> will leave them alone.
  *
  * <h2>Simple constants</h2>
  * <p>
