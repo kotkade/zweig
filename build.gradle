@@ -23,7 +23,7 @@ repositories {
 }
 
 dependencies {
-    compile localGroovy()
+    compile "org.codehaus.groovy:groovy:1.8.9"
 
     testCompile("org.spockframework:spock-core:0.7-groovy-1.8") {
         exclude group: "org.codehaus.groovy", module: "groovy-all"
