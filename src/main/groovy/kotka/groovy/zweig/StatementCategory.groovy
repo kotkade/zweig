@@ -53,8 +53,11 @@ class StatementCategory {
                             it["else"].toStatement() :
                             EmptyStatement.INSTANCE
                 )
-            }
+            },
 
+            do: {
+                it["do"].toBlockStatement()
+            }
     ]
 
     static toStatement(Map m) {

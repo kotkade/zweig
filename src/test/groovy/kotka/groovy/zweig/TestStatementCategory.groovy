@@ -1,5 +1,6 @@
 package kotka.groovy.zweig
 
+import org.codehaus.groovy.ast.*
 import org.codehaus.groovy.ast.expr.*
 import org.codehaus.groovy.ast.stmt.*
 import spock.lang.Specification
@@ -77,5 +78,23 @@ class TestStatementCategory extends Specification {
         ZweigBuilder.withCategories {
             [variable: "foo"].toStatement() instanceof Statement
         }
+    }
+
+    def "BlockStatements dispatch on the 'do' key"() {
+        given:
+        def target = new BlockStatement([
+                new ExpressionStatement(new ConstantExpression(null)),
+                new ExpressionStatement(new ConstantExpression("foo"))
+            ],
+            new VariableScope()
+        )
+
+        when:
+        def z = ZweigBuilder.toStatement([
+                do: [ null, "foo" ]
+        ])
+
+        then:
+        AstAssert.assertSyntaxTree(target, z)
     }
 }
