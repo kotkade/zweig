@@ -8,7 +8,7 @@ buildscript {
     }
 }
 
-version = "0.1.0"
+version = "0.2.0-SNAPSHOT"
 group   = "de.kotka.groovy"
 
 description = "A small library to create groovy AST transformations"
