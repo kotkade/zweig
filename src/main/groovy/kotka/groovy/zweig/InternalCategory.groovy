@@ -76,6 +76,10 @@ class InternalCategory {
         i
     }
 
+    static toModifier(Long l) {
+        l
+    }
+
     def private static Map modifierTranslation = [
             public:       Modifier.PUBLIC,
             private:      Modifier.PRIVATE,
