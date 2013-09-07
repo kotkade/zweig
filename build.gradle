@@ -1,10 +1,11 @@
 buildscript {
     repositories {
-        maven { url "http://127.0.0.1:8080/repository/internal" }
+        mavenCentral()
+        maven { url "http://clojars.org/repo" }
     }
 
     dependencies {
-        classpath "de.kotka.gradle:gradle-plugin:1.0.1"
+        classpath "de.kotka.gradle:gradle-plugin:1.1.0"
     }
 }
 
@@ -13,7 +14,10 @@ group   = "de.kotka.groovy"
 
 description = "A small library to create groovy AST transformations"
 
-ext."kotka.repository" = "kotkade/zweig"
+ext.kotka = [
+    repository:     "kotkade/zweig",
+    wrapperVersion: "1.7"
+]
 
 apply plugin: "kotka"
 apply plugin: "groovy"
@@ -43,8 +47,4 @@ task groovyDocJar(type: Jar) {
 artifacts {
     archives sourcesJar
     archives groovyDocJar
-}
-
-task wrapper(type: Wrapper) {
-    gradleVersion = "1.7"
 }
