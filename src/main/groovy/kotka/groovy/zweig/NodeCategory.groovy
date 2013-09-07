@@ -27,6 +27,7 @@ import org.codehaus.groovy.ast.ASTNode
 import org.codehaus.groovy.ast.ClassHelper
 import org.codehaus.groovy.ast.ClassNode
 import org.codehaus.groovy.ast.ConstructorNode
+import org.codehaus.groovy.ast.FieldNode
 import org.codehaus.groovy.ast.MethodNode
 import org.codehaus.groovy.ast.Parameter
 import org.codehaus.groovy.ast.VariableScope
@@ -74,6 +75,22 @@ class NodeCategory {
                         parameters as Parameter[],
                         exceptions as ClassNode[],
                         new BlockStatement(body, new VariableScope())
+                )
+            },
+
+            field: {
+                def fieldName = it["field"]
+                def modifier  = it["modifier"].toModifier()
+                def className = it["of"].toClassNode()
+                def type      = it["type"].toClassNode()
+                def init      = it["init"].toExpression()
+
+                new FieldNode(
+                    fieldName,
+                    modifier,
+                    type,
+                    className,
+                    init
                 )
             }
     ]

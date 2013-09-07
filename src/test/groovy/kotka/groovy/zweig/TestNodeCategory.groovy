@@ -77,4 +77,29 @@ class TestNodeCategory extends Specification {
         then:
         AstAssert.assertSyntaxTree(target, z)
     }
+
+    class Dummy {}
+
+    def "Field nodes dispatch on the 'field' key"() {
+        given:
+        def target = new FieldNode(
+                "foo",
+                Modifier.STATIC | Modifier.PRIVATE,
+                ClassHelper.STRING_TYPE,
+                ClassHelper.make(Dummy),
+                new ConstantExpression("bar")
+        )
+
+        when:
+        def z = ZweigBuilder.toNode([
+                field:    "foo",
+                of:       Dummy,
+                type:     String,
+                modifier: ["static", "private"],
+                init:     "bar"
+        ])
+
+        then:
+        AstAssert.assertSyntaxTree(target, z)
+    }
 }
