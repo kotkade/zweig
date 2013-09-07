@@ -46,13 +46,13 @@ class NodeCategory {
                 def modifier   = it["modifier"] ?: Modifier.PUBLIC
                 def parameters = it["constructor"].collect { it.toParameter() }
                 def exceptions = it["exceptions"].collect  { it.toClassNode() }
-                def body       = it["body"].collect { it.toStatement() }
+                def body       = it["body"].toBlockStatement()
 
                 new ConstructorNode(
                         modifier.toModifier(),
                         parameters as Parameter[],
                         exceptions as ClassNode[],
-                        new BlockStatement(body, new VariableScope())
+                        body
                 )
             },
 
@@ -64,9 +64,7 @@ class NodeCategory {
                 def exceptions = it["exceptions"].collect { it.toClassNode() }
 
                 def returnType = it["returnType"] ?: ClassHelper.OBJECT_TYPE
-                def body       = it["body"].collect {
-                    it.toStatement()
-                }
+                def body       = it["body"].toBlockStatement()
 
                 new MethodNode(
                         methodName,
@@ -74,7 +72,7 @@ class NodeCategory {
                         returnType.toClassNode(),
                         parameters as Parameter[],
                         exceptions as ClassNode[],
-                        new BlockStatement(body, new VariableScope())
+                        body
                 )
             },
 

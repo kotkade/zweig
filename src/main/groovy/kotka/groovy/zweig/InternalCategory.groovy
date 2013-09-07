@@ -26,9 +26,11 @@ package kotka.groovy.zweig
 import org.codehaus.groovy.ast.ClassHelper
 import org.codehaus.groovy.ast.ClassNode
 import org.codehaus.groovy.ast.Parameter
+import org.codehaus.groovy.ast.VariableScope
 import org.codehaus.groovy.ast.expr.ArgumentListExpression
 import org.codehaus.groovy.ast.expr.BooleanExpression
 import org.codehaus.groovy.ast.expr.Expression
+import org.codehaus.groovy.ast.stmt.BlockStatement
 import org.codehaus.groovy.runtime.NullObject
 
 import java.lang.reflect.Modifier
@@ -114,5 +116,18 @@ class InternalCategory {
 
     static toBooleanExpression(Object o) {
         o.toExpression().toBooleanExpression()
+    }
+
+    /* toBlockStatement */
+    static toBlockStatement(BlockStatement b) {
+        b
+    }
+
+    static toBlockStatement(List l) {
+        new BlockStatement(l.collect { it.toStatement() }, new VariableScope())
+    }
+
+    static toBlockStatement(Object o) {
+        [o].toBlockStatement()
     }
 }

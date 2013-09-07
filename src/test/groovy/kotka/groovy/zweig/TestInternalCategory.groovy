@@ -2,6 +2,7 @@ package kotka.groovy.zweig
 
 import org.codehaus.groovy.ast.*
 import org.codehaus.groovy.ast.expr.*
+import org.codehaus.groovy.ast.stmt.*
 import spock.lang.Specification
 
 import java.lang.reflect.Modifier
@@ -118,5 +119,58 @@ class TestInternalCategory extends Specification {
         ZweigBuilder.withCategories {
             null.toModifier() == Modifier.PUBLIC
         }
+    }
+
+    /* toBlockStatement */
+    def "toBlockStatement is idempotent"() {
+        given:
+        def target = new BlockStatement(
+            [new ExpressionStatement(new ConstantExpression(null))],
+            new VariableScope()
+        )
+        def z
+
+        when:
+        ZweigBuilder.withCategories {
+            z = target.toBlockStatement()
+        }
+
+        then:
+        AstAssert.assertSyntaxTree(target, z)
+    }
+
+    def "toBlockStatement turns lists into block statements"() {
+        given:
+        def target = new BlockStatement(
+            [new ExpressionStatement(new ConstantExpression(null)),
+             new ExpressionStatement(new ConstantExpression(null))],
+            new VariableScope()
+        )
+        def z
+
+        when:
+        ZweigBuilder.withCategories {
+            z = [null, null].toBlockStatement()
+        }
+
+        then:
+        AstAssert.assertSyntaxTree(target, z)
+    }
+
+    def "toBlockStatement turns everything else into a one statement block"() {
+        given:
+        def target = new BlockStatement(
+            [new ExpressionStatement(new ConstantExpression(null))],
+            new VariableScope()
+        )
+        def z
+
+        when:
+        ZweigBuilder.withCategories {
+            z = null.toBlockStatement()
+        }
+
+        then:
+        AstAssert.assertSyntaxTree(target, z)
     }
 }
