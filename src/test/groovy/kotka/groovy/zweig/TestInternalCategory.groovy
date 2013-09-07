@@ -112,4 +112,11 @@ class TestInternalCategory extends Specification {
             ["public", Modifier.STATIC].toModifier() == m
         }
     }
+
+    def "toModifier defaults to public"() {
+        expect:
+        ZweigBuilder.withCategories {
+            null.toModifier() == Modifier.PUBLIC
+        }
+    }
 }

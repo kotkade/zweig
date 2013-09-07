@@ -99,6 +99,10 @@ class InternalCategory {
         l.inject(0) { mod, m -> mod | m.toModifier() }
     }
 
+    static toModifier(NullObject _) {
+        Modifier.PUBLIC
+    }
+
     /* toBooleanExpression */
     static toBooleanExpression(BooleanExpression b) {
         b
