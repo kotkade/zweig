@@ -97,4 +97,25 @@ class TestStatementCategory extends Specification {
         then:
         AstAssert.assertSyntaxTree(target, z)
     }
+
+    def "SynchronizedStatements dispatch on the 'synchronized' key"() {
+        given:
+        def target = new SynchronizedStatement(
+            new VariableExpression("foo"),
+            new BlockStatement([
+                    new ExpressionStatement(new ConstantExpression(null))
+                ],
+                new VariableScope()
+            )
+        )
+
+        when:
+        def z = ZweigBuilder.toStatement([
+                on:          [variable: "foo"],
+                synchronize: [ null ]
+        ])
+
+        then:
+        AstAssert.assertSyntaxTree(target, z)
+    }
 }

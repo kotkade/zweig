@@ -29,6 +29,7 @@ import org.codehaus.groovy.ast.stmt.ExpressionStatement
 import org.codehaus.groovy.ast.stmt.IfStatement
 import org.codehaus.groovy.ast.stmt.ReturnStatement
 import org.codehaus.groovy.ast.stmt.Statement
+import org.codehaus.groovy.ast.stmt.SynchronizedStatement
 
 class StatementCategory {
     /* toStatement */
@@ -57,6 +58,13 @@ class StatementCategory {
 
             do: {
                 it["do"].toBlockStatement()
+            },
+
+            synchronize: {
+                new SynchronizedStatement(
+                    it["on"].toExpression(),
+                    it["synchronized"].toBlockStatement()
+                )
             }
     ]
 
