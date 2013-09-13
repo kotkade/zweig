@@ -110,6 +110,19 @@ class TestExpressionCategory extends Specification {
         ]
     }
 
+    def "Not expressions dispatch on the 'not' key"() {
+        given:
+        def target = new NotExpression(
+            new BooleanExpression(new ConstantExpression(true))
+        )
+
+        when:
+        def z = ZweigBuilder.toExpression([not: true])
+
+        then:
+        AstAssert.assertSyntaxTree(target, z)
+    }
+
     def "Variables dispatch on the 'variable' key"() {
         when:
         def z = ZweigBuilder.toExpression([variable: "x"])
