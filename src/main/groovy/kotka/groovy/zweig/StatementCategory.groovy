@@ -63,7 +63,7 @@ class StatementCategory {
             synchronize: {
                 new SynchronizedStatement(
                     it["on"].toExpression(),
-                    it["synchronized"].toBlockStatement()
+                    it["synchronize"].toBlockStatement()
                 )
             }
     ]

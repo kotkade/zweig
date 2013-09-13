@@ -103,7 +103,7 @@ class TestStatementCategory extends Specification {
         def target = new SynchronizedStatement(
             new VariableExpression("foo"),
             new BlockStatement([
-                    new ExpressionStatement(new ConstantExpression(null))
+                    new ExpressionStatement(new ConstantExpression(true))
                 ],
                 new VariableScope()
             )
@@ -112,7 +112,7 @@ class TestStatementCategory extends Specification {
         when:
         def z = ZweigBuilder.toStatement([
                 on:          [variable: "foo"],
-                synchronize: [ null ]
+                synchronize: [ true ]
         ])
 
         then:
