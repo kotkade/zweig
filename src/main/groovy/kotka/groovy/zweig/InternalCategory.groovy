@@ -49,11 +49,14 @@ class InternalCategory {
 
     /* toClassNode */
     static toClassNode(ClassNode n) {
-        n
+        /* Make sure there are no generics. */
+        n.isUsingGenerics() ?
+            Util.nonGeneric(n) :
+            n
     }
 
     static toClassNode(Class c) {
-        ClassHelper.make(c, false)
+        ClassHelper.make(c).toClassNode()
     }
 
     static toClassNode(String s) {
