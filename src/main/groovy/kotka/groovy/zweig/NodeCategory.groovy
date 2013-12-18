@@ -41,11 +41,6 @@ class NodeCategory {
         n
     }
 
-    /* XXX: Make sure we copy class nodes! */
-    static toNode(ClassNode n) {
-        n.toClassNode()
-    }
-
     static final mapToNode = [
             constructor: {
                 def modifier   = it["modifier"] ?: Modifier.PUBLIC

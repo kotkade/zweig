@@ -49,10 +49,7 @@ class InternalCategory {
 
     /* toClassNode */
     static toClassNode(ClassNode n) {
-        /* Always create a new class node. You never know.
-         * cf. http://grails.io/post/15965611310/lessons-learnt-developing-groovy-ast-transformations
-         */
-        ClassHelper.make(n.name)
+        n
     }
 
     static toClassNode(Class c) {
