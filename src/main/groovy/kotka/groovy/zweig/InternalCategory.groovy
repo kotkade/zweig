@@ -51,7 +51,7 @@ class InternalCategory {
     static toClassNode(ClassNode n) {
         /* Make sure there are no generics. */
         n.isUsingGenerics() ?
-            Util.nonGeneric(n) :
+            ZweigUtil.nonGeneric(n) :
             n
     }
 

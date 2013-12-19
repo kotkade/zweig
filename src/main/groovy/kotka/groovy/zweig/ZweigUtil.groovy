@@ -27,7 +27,7 @@ import org.codehaus.groovy.ast.ClassHelper
 import org.codehaus.groovy.ast.ClassNode
 import org.codehaus.groovy.ast.Parameter
 
-class Util {
+class ZweigUtil {
     /* Taken from https://github.com/grails/grails-core/blob/770bb6ceb23bff3bf84236182e1aed897781bc03/grails-core/src/main/groovy/org/codehaus/groovy/grails/compiler/injection/GrailsASTUtils.java#L439 */
     def static Parameter[] copyParameters(Parameter[] parameterTypes) {
         parameterTypes.collect {
